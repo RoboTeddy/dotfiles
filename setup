@@ -13,14 +13,15 @@ success () {
 }
 
 install_symlink () {
-	src=$1
-	dst=$2
+    src=$1
+    dst=$2
     if [ ! -f "$dst" ] && [ ! -d "$dst" ]
     then
         ln -s "$src" "$dst"
+        # should check for actual success....
         success "Symlinked $src to $dst"
     else
-    	success "Skipped $src"
+        success "Skipped $src"
     fi
 }
 

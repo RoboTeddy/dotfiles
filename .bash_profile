@@ -1,4 +1,3 @@
-
 # For secret loot that shouldn't be versioned
 if [[ -a ~/.localrc ]]
 then
