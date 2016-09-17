@@ -84,6 +84,27 @@ defaults write -g ApplePressAndHoldEnabled -bool false
 # chflags nohidden ~/Library
 # chflags nohidden ~/.ssh
 
+# Enable tap to click for this user and for the login screen
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+sudo defaults write com.apple.AppleMultitouchTrackpad Clicking 1
+
+# Move content in the direction of finger movement when scrolling or navigating (natural)
+defaults write -g 'com.apple.swipescrolldirection' -bool false
+
+# Launchpad: no
+defaults write com.apple.dock 'showLaunchpadGestureEnabled' -bool false
+
+# Show Desktop: yes
+defaults write com.apple.dock 'showDesktopGestureEnabled' -bool true
+
+# disable Dashboard
+defaults write com.apple.dashboard mcx-disabled -bool true
+
+# Don't Show Dashboard as a space
+defaults write com.apple.dock 'dashboard-in-overlay' -bool false
+
 # Set a really fast key repeat.
 defaults write NSGlobalDomain KeyRepeat -int 0
 
