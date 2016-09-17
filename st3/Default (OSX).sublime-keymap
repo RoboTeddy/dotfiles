@@ -1,0 +1,31 @@
+[
+  { "keys": ["k", "j"], "command": "exit_insert_mode", "context":
+      [
+          { "key": "setting.command_mode", "operand": false },
+          { "key": "setting.is_widget", "operand": false }
+      ]
+  },
+  // in order to exit insert mode when autocomplete is open:
+  { "keys": ["escape"], "command": "exit_insert_mode", "context":
+      [
+          { "key": "setting.command_mode", "operand": false },
+          { "key": "setting.is_widget", "operand": false },
+          { "key": "setting.vintage_ctrl_keys" }
+      ]
+  },
+
+  {"keys": ["ctrl+l"], "command": "focus_neighboring_group" },
+  {"keys": ["ctrl+h"], "command": "focus_neighboring_group", "args": {"forward": false} },
+  {"keys": ["ctrl+shift+l"], "command": "move_to_neighboring_group" },
+  {"keys": ["ctrl+shift+h"], "command": "move_to_neighboring_group", "args": {"forward": false} },
+  {"keys": [",", "g"], "command": "goto_definition"},
+  {"keys": [",", "h"], "command": "jump_back"},
+  {"keys": [",", "l"], "command": "jump_forward"},
+
+  { "keys": ["super+'"], "command": "append_closing_form_symbol"
+    //, "context": [{"key": "setting.command_mode", "operand": true}]
+  },
+  { "keys": ["shift+super+'"], "command": "append_all_closing_form_symbols"
+    //, "context": [{"key": "setting.command_mode", "operand": true}]
+  }
+]

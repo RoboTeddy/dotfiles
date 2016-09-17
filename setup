@@ -47,6 +47,16 @@ install_symlink "$DOTFILES_ROOT/.gitconfig" "$HOME/.gitconfig"
 install_symlink "$DOTFILES_ROOT/.gitignore-global" "$HOME/.gitignore-global"
 install_symlink "$DOTFILES_ROOT/Brewfile" "$HOME/Brewfile"
 
+SUBLIME_USER_ROOT="$HOME/Library/Application Support/Sublime Text 3/Packages/User"
+for name in "Default (OSX).sublime-keymap" "Preferences.sublime-settings"
+do
+    dst="$SUBLIME_USER_ROOT/$name"
+    if [ ! -L "$dst" ] && [ -f "$dst" ] # no symlink yet
+    then
+        mv "$dst" "$dst.old"
+    fi
+    install_symlink "$DOTFILES_ROOT/st3/$name" "$dst"
+done
 
 ### Cron
 
