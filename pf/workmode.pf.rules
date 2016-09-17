@@ -1,0 +1,95 @@
+# Options
+set block-policy drop
+set fingerprints "/etc/pf.os"
+set ruleset-optimization basic
+set skip on lo0
+ 
+# Normalization
+# Scrub incoming packets
+scrub in all no-df
+ 
+# Queueing
+ 
+# Translation
+ 
+# Filtering
+# Antispoof
+# antispoof log quick for { lo0 en0 en2 }
+ 
+# Block by default
+block in all
+block out all
+ 
+# Block to/from illegal destinations or sources
+# block in log quick from no-route to any
+ 
+# Allow DHCP
+pass in quick inet proto udp from any port 67 to any port 68
+ 
+# Allow ICMP
+pass proto icmp all
+
+# Allow SSH
+pass in inet proto tcp from any to any port 22 flags S/SA keep state
+pass out inet proto tcp from any to any port 22 keep state  
+
+# Allow DNS
+pass in inet proto { tcp, udp } from any to any port 53 keep state  
+pass out inet proto { tcp, udp } from any to any port 53 keep state 
+
+# s3.amazonaws.com for uploading screenshots
+table <misc> { \
+  s3.amazonaws.com, \
+  workflowy.com, \
+  10.1.10.1 \
+}
+
+# http://bgp.he.net/search?search%5Bsearch%5D=spotify&commit=Search
+table <spotify> { \
+  23.92.96.0/22, \
+  23.92.100.0/22, \
+  23.92.104.0/22, \
+  78.31.8.0/22, \
+  78.31.12.0/22, \
+  192.121.53.0/24, \
+  192.121.132.0/24, \
+  192.121.140.0/24, \
+  192.165.160.0/22, \
+  193.181.4.0/22, \
+  193.181.180.0/22, \
+  193.181.184.0/23, \
+  193.182.3.0/24, \
+  193.182.7.0/24, \
+  193.182.8.0/21, \
+  193.182.243.0/24, \
+  193.182.244.0/24, \
+  193.234.240.0/22, \
+  193.235.32.0/24, \
+  193.235.51.0/24, \
+  193.235.203.0/24, \
+  193.235.206.0/24, \
+  193.235.224.0/24, \
+  193.235.232.0/22, \
+  194.14.177.0/24, \
+  194.68.28.0/22, \
+  194.68.116.0/24, \
+  194.68.169.0/24, \
+  194.68.176.0/22, \
+  194.68.181.0/24, \
+  194.68.183.0/24, \
+  194.71.148.0/22, \
+  194.71.232.0/22, \
+  194.103.10.0/24, \
+  194.103.13.0/24, \
+  194.103.36.0/22, \
+  194.132.152.0/22, \
+  194.132.162.0/24, \
+  194.132.176.0/22, \
+  194.132.196.0/22 \
+}
+
+pass in inet proto tcp from <spotify> to any
+pass out inet proto tcp from any to <spotify>
+
+pass in inet proto tcp from <misc> to any
+pass out inet proto tcp from any to <misc>

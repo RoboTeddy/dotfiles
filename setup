@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "$0")" # cd to directory this file is in
+DOTFILES_ROOT="$(pwd -P)"
+
+### Utilities
+
+info () {
+	printf "\r  [ \033[00;34m..\033[0m ] $1\n"
+}
+success () {
+	printf "\r\033[2K  [ \033[00;32mOK\033[0m ] $1\n"
+}
+
+install_symlink () {
+	src=$1
+	dst=$2
+    if [ ! -f "$dst" ] && [ ! -d "$dst" ]
+    then
+        ln -s "$src" "$dst"
+        success "Symlinked $src to $dst"
+    else
+    	success "Skipped $src"
+    fi
+}
+
+
+### Homebrew (runs before symlinks are installed, since .bash_profile depends on brew & things in Brewfile)
+
+if ! type "brew" > /dev/null
+then
+    info 'Installing homebrew...'
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
+
+info 'Running brew bundle...'
+brew bundle
+
+
+### Symlinks
+
+info 'Writing symlinks...'
+install_symlink "$DOTFILES_ROOT" "$HOME/dotfiles"
+install_symlink "$DOTFILES_ROOT/.bash_profile" "$HOME/.bash_profile"
+install_symlink "$DOTFILES_ROOT/.gitconfig" "$HOME/.gitconfig"
+install_symlink "$DOTFILES_ROOT/.gitignore-global" "$HOME/.gitignore-global"
+install_symlink "$DOTFILES_ROOT/Brewfile" "$HOME/Brewfile"
+
+
+### Cron
+
+#cp things/net.suzman.ted.record-things-inbox-count.plist ~/Library/LaunchAgents
+#launchctl load ~/Library/LaunchAgents/net.suzman.ted.record-things-inbox-count.plist
+
+
+### macOS Settings
+
+info 'Writing macOS settings...'
+
+defaults write -g ApplePressAndHoldEnabled -bool false
+
+# Always open everything in Finder's list view. This is important.
+# defaults write com.apple.Finder FXPreferredViewStyle Nlsv
+
+# Show the ~/Library folder.
+# chflags nohidden ~/Library
+# chflags nohidden ~/.ssh
+
+# Set a really fast key repeat.
+defaults write NSGlobalDomain KeyRepeat -int 0
+
+# Set the Finder prefs for hiding a few different volumes on the Desktop.
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
+defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool false
+
+# Hide Safari's bookmark bar.
+defaults write com.apple.Safari ShowFavoritesBar -bool false
+
+# Set up Safari for development.
+defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled" -bool true
+defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+
+
+info 'Sourcing ~/.bash_profile...'
+
+source ~/.bash_profile
+
+success 'Done!'

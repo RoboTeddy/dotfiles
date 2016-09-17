@@ -1,0 +1,1 @@
+(printf "%s,%s\n" `date +%s` `~/.dotfiles/bin/things-inbox-count`) >> ~/things-inbox-counts

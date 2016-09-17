@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+require 'open3'
+require 'pathname'
+require 'SecureRandom'
+require 'tmpdir'
+
+require 'rubygems'
+require 'aws-sdk'
+
+path = Pathname.new(Dir.tmpdir) + "#{SecureRandom.hex}.png"
+
+system "screencapture -i \"#{path}\""
+exit unless File.exists?(path)
+
+begin
+  system "sips -d profile --deleteColorManagementProperties \"#{path}\""
+
+  s3 = AWS::S3.new(
+    :access_key_id => ENV['S3_SCREENSHOT_ACCESS_KEY_ID'],
+    :secret_access_key => ENV['S3_SCREENSHOT_SECRET_ACCESS_KEY'],
+    :s3_endpoint => ENV['S3_SCREENSHOT_ENDPOINT']
+  )
+
+  bucket = s3.buckets[ENV['S3_SCREENSHOT_BUCKET']]
+  object = bucket.objects[path.basename]
+  Open3.popen3('/usr/bin/pbcopy'){ |input, _, _| input << object.public_url }
+  object.write(path, :acl => :public_read, :content_type => "image/png")
+ensure
+  File.unlink(path)
+end

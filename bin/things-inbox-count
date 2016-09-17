@@ -1,0 +1,14 @@
+temp=`basename $0`
+TMPFILE=`mktemp -t ${temp}` || exit 1
+
+DB="/Users/ted/Library/Containers/com.culturedcode.things/Data/Library/Application Support/Cultured Code/Things/ThingsLibrary.db"
+
+SQL="SELECT COUNT(*) FROM ZTHING WHERE ZTRASHED = 0 AND ZSTATUS = 0 AND ZSTART = 0;"
+
+
+# avoid exclusive lock
+cp "$DB" "${TMPFILE}"
+
+/usr/bin/sqlite3 "$TMPFILE" "$SQL"
+
+rm $TMPFILE

@@ -1,0 +1,14 @@
+[user]
+        name = Ted Suzman
+        email = ted@suzman.net
+[color]
+        diff = auto
+        status = auto
+        branch = auto
+[core]
+        excludesfile = ~/.gitignore-global
+        autocrlf = input
+[apply]
+        whitespace = nowarn
+[push]
+        default = current
