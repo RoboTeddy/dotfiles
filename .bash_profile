@@ -4,7 +4,7 @@ then
     source ~/.localrc
 fi
 
-export PATH="~/dotfiles/bin:$ZSH/bin:/usr/local/bin:/usr/local/sbin:$PATH"
+export PATH="~/dotfiles/bin:/usr/local/bin:/usr/local/sbin:$PATH"
 export MANPATH="/usr/local/man:/usr/local/git/man:$MANPATH"
 
 
