@@ -58,6 +58,7 @@ install_symlink "$DOTFILES_ROOT/.bash_profile" "$HOME/.bash_profile"
 install_symlink "$DOTFILES_ROOT/.gitconfig" "$HOME/.gitconfig"
 install_symlink "$DOTFILES_ROOT/.gitignore-global" "$HOME/.gitignore-global"
 install_symlink "$DOTFILES_ROOT/Brewfile" "$HOME/Brewfile"
+install_symlink "$DOTFILES_ROOT/karabiner/private.xml" "$HOME/Library/Application Support/Karabiner/private.xml"
 
 SUBLIME_USER_ROOT="$HOME/Library/Application Support/Sublime Text 3/Packages/User"
 for name in "Default (OSX).sublime-keymap" "Preferences.sublime-settings"
@@ -70,6 +71,17 @@ done
 #cp things/net.suzman.ted.record-things-inbox-count.plist ~/Library/LaunchAgents
 #launchctl load ~/Library/LaunchAgents/net.suzman.ted.record-things-inbox-count.plist
 
+### Karabiner
+# Can reproduce this via `karabiner export`
+
+info 'Configuring karabiner'
+
+kara=/usr/local/bin/karabiner
+$kara reloadxml
+$kara set bilalh.remap.f19_escape_control 1
+$kara set repeat.initial_wait 180
+$kara set repeat.wait 33
+$kara set remap.custom_global_screenshot 1
 
 ### macOS Settings
 
@@ -128,3 +140,8 @@ info 'Sourcing ~/.bash_profile...'
 source ~/.bash_profile
 
 success 'Done!'
+
+echo ""
+echo "If you haven't already, make Seil and Karabiner look like this: "
+echo "https://roboteddy-img.s3.amazonaws.com/48ae7592e808e11033f15f8b2cd59b73.png"
+echo ""

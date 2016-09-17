@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<root>
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_APP_Term</name>
+    <url type="file">/Applications/iTerm.app</url>
+  </vkopenurldef>
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_SHELL_screenshot</name>
+    <url type="shell">
+      <![CDATA[
+              bash -lic "screenshot"
+      ]]>
+    </url>
+  </vkopenurldef>
+
+  <item>
+    <name>Custom global shortcuts</name>
+
+    <item>
+      <name>Take screenshot with opt-cmd-s</name>
+
+      <identifier>remap.custom_global_screenshot</identifier>
+
+      <autogen>
+        __KeyToKey__
+        KeyCode::S, ModifierFlag::COMMAND_L, ModifierFlag::OPTION_L,
+        KeyCode::VK_OPEN_URL_SHELL_screenshot
+      </autogen>
+    </item>
+
+  </item>
+</root>
