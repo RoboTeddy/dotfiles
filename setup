@@ -37,6 +37,11 @@ fi
 info 'Running brew bundle...'
 brew bundle
 
+### Dependency for bin/screenshot
+
+info 'Installing dependencies for bin/screenshot'
+
+sudo gem install --conservative aws-sdk -v '~> 2'
 
 ### Symlinks
 

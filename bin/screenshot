@@ -14,18 +14,21 @@ system "screencapture -i \"#{path}\""
 exit unless File.exists?(path)
 
 begin
-  system "sips -d profile --deleteColorManagementProperties \"#{path}\""
+  system "sips --deleteColorManagementProperties \"#{path}\" > /dev/null"
 
-  s3 = AWS::S3.new(
-    :access_key_id => ENV['S3_SCREENSHOT_ACCESS_KEY_ID'],
-    :secret_access_key => ENV['S3_SCREENSHOT_SECRET_ACCESS_KEY'],
-    :s3_endpoint => ENV['S3_SCREENSHOT_ENDPOINT']
+  client = Aws::S3::Client.new(
+    region: ENV['S3_SCREENSHOT_REGION'],
+    credentials: Aws::Credentials.new(
+      ENV['S3_SCREENSHOT_ACCESS_KEY_ID'],
+      ENV['S3_SCREENSHOT_SECRET_ACCESS_KEY']
+    )
   )
 
-  bucket = s3.buckets[ENV['S3_SCREENSHOT_BUCKET']]
-  object = bucket.objects[path.basename]
+  s3 = Aws::S3::Resource.new(client: client)
+
+  object = s3.bucket(ENV['S3_SCREENSHOT_BUCKET']).object(path.basename.to_s)
   Open3.popen3('/usr/bin/pbcopy'){ |input, _, _| input << object.public_url }
-  object.write(path, :acl => :public_read, :content_type => "image/png")
+  object.upload_file(path, :acl => "public-read", :content_type => "image/png")
 ensure
   File.unlink(path)
 end
