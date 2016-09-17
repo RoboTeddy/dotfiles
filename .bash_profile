@@ -58,6 +58,7 @@ alias gdmb='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 
 ### General conveniences
 
+alias subl='"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"'
 alias pubkey="more ~/.ssh/id_rsa.pub | pbcopy | echo '=> Public key copied to pasteboard.'"
 
 # Usage: extract <file>
