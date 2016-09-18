@@ -64,7 +64,7 @@ alias gdmb='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 ### General conveniences
 
 function p() {
-    cd "~/projects/$1"
+    cd "$HOME/Projects/$1"
 }
 
 alias subl='"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"'
