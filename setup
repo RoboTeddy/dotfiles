@@ -91,11 +91,10 @@ $kara set remap.custom_global_screenshot 1
 
 info "Setting up periodic tasks"
 
-for f in "roboteddy.internet-off.plist" "roboteddy.internet-on.plist"
+for f in cron/*.plist
 do
-    dst="$HOME/Library/LaunchAgents/$f"
-    install_symlink "$DOTFILES_ROOT/cron/$f" "$dst"
-    launchctl unload -w "$dst"
+    dst="$HOME/Library/LaunchAgents/$(basename "$f")"
+    install_symlink "$DOTFILES_ROOT/$f" "$dst"
     launchctl load -w "$dst"
     success "Set up $dst"
 done

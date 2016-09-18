@@ -38,10 +38,13 @@ pass in inet proto { tcp, udp } from any to any port 53 keep state
 pass out inet proto { tcp, udp } from any to any port 53 keep state 
 
 # s3.amazonaws.com for uploading screenshots
+# fonts.googleapis.com for workflowy. 52.72.169.121 is workflowy's ip
 table <misc> { \
   s3.amazonaws.com, \
   workflowy.com, \
-  10.1.10.1 \
+  fonts.googleapis.com, \
+  10.1.10.1, \
+  52.72.169.121 \
 }
 
 # http://bgp.he.net/search?search%5Bsearch%5D=spotify&commit=Search

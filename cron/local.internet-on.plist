@@ -3,15 +3,17 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>roboteddy.internet-off</string>
+    <string>local.internet-on</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/users/ted/dotfiles/bin/internet-off</string>
+        <string>/bin/bash</string>
+        <string>-lic</string>
+        <string>"internet-on"</string>
     </array>
     <key>StartCalendarInterval</key>
     <dict>
         <key>Hour</key>
-        <integer>22</integer>
+        <integer>19</integer>
         <key>Minute</key>
         <integer>0</integer>
     </dict>

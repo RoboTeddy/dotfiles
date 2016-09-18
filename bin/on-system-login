@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+
+# launchd executes this whenever the user logs in
+
+# Call internet-off unless we're in the period when internet should be on
+# Internet should be on from 7pm to 10pm
+
+cd "$(dirname "$0")" # cd to directory this file is in
+
+time=$(date +%k%M)
+if [[ "$time" -le 1900 ]] || [[ "$time" -ge 2200 ]];then
+  ./internet-off
+fi
