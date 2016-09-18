@@ -44,6 +44,14 @@ fi
 info 'Running brew bundle...'
 brew bundle
 
+
+### Pyenv
+
+pyenv install -s 3.5.2
+pyenv global 3.5.2
+pip install --upgrade pip
+
+
 ### Dependency for bin/screenshot
 
 info 'Installing dependencies for bin/screenshot'
@@ -66,11 +74,6 @@ do
     install_symlink "$DOTFILES_ROOT/st3/$name" "$SUBLIME_USER_ROOT/$name"
 done
 
-### Cron
-
-#cp things/net.suzman.ted.record-things-inbox-count.plist ~/Library/LaunchAgents
-#launchctl load ~/Library/LaunchAgents/net.suzman.ted.record-things-inbox-count.plist
-
 ### Karabiner
 # Can reproduce this via `karabiner export`
 
@@ -82,6 +85,28 @@ $kara set bilalh.remap.f19_escape_control 1
 $kara set repeat.initial_wait 180
 $kara set repeat.wait 33
 $kara set remap.custom_global_screenshot 1
+
+
+### Cron
+
+info "Setting up periodic tasks"
+
+for f in "roboteddy.internet-off.plist" "roboteddy.internet-on.plist"
+do
+    dst="$HOME/Library/LaunchAgents/$f"
+    install_symlink "$DOTFILES_ROOT/cron/$f" "$dst"
+    launchctl unload -w "$dst"
+    launchctl load -w "$dst"
+    success "Set up $dst"
+done
+
+# internet-on and internet-off sudo /sbin/pfctl to modify the firewall
+# task can't prompt for password, so let's modify sudoers.
+# careful here! screwing up sudoers file is bad.
+LINE="%admin ALL = NOPASSWD: /sbin/pfctl"
+FILE=/etc/sudoers
+sudo grep -q "$LINE" "$FILE" || sudo echo "$LINE" >> "$FILE"
+
 
 ### macOS Settings
 

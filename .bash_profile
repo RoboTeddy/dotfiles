@@ -13,6 +13,11 @@ export MANPATH="/usr/local/man:/usr/local/git/man:$MANPATH"
 source "`brew --prefix`/etc/grc.bashrc"
 
 
+### Pyenv
+
+eval "$(pyenv init -)"
+
+
 ### Java
 
 # used by .dotfiles/aws
@@ -58,6 +63,10 @@ alias gdmb='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 
 ### General conveniences
 
+function p() {
+    cd "~/projects/$1"
+}
+
 alias subl='"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"'
 alias setup='~/dotfiles/setup'
 alias pubkey="more ~/.ssh/id_rsa.pub | pbcopy | echo '=> Public key copied to pasteboard.'"
@@ -87,3 +96,12 @@ extract () {
         echo "'$1' is not a valid file"
     fi
 }
+
+### Autocompletion
+
+bind "set completion-ignore-case on"
+bind "set show-all-if-ambiguous on"
+
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+fi

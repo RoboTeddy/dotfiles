@@ -1,1 +1,1 @@
-sudo pfctl -f ~/dotfiles/pf/workmode.conf && sudo pfctl -e -k 0.0.0.0/0
+sudo pfctl -f /users/ted/dotfiles/pf/workmode.conf && sudo pfctl -e -k 0.0.0.0/0
