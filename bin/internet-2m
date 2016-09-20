@@ -1,8 +1,0 @@
-#!/bin/sh
-
-echo "Switching internet on"
-internet-on
-echo "Waiting 2 minutes..."
-sleep 120
-echo "Switching internet off"
-internet-off

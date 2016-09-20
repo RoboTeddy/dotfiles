@@ -1,0 +1,15 @@
+#!/bin/sh
+
+minutes=$1
+
+function finish () {
+  echo "finishing..."
+  internet-off
+}
+
+trap finish EXIT
+
+echo "Switching internet on for $minutes minutes"
+internet-on
+
+sleep $(($minutes * 60))
