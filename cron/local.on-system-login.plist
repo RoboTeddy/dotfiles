@@ -10,6 +10,11 @@
         <string>-lic</string>
         <string>"on-system-login"</string>
     </array>
+    <key>StandardOutPath</key>
+    <string>/tmp/launchd.local.on-system-login.stdout</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/launchd.local.on-system-login.stderr</string>
+    <key>StartCalendarInterval</key>
     <key>RunAtLoad</key>
     <true/>
 </dict>

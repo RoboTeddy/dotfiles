@@ -10,6 +10,10 @@
         <string>-lic</string>
         <string>"internet-off"</string>
     </array>
+    <key>StandardOutPath</key>
+    <string>/tmp/launchd.local.internet-off.stdout</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/launchd.local.internet-off.stderr</string>
     <key>StartCalendarInterval</key>
     <dict>
         <key>Hour</key>
