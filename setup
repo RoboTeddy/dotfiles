@@ -24,6 +24,12 @@ install_symlink () {
 
     if [ ! -f "$dst" ] && [ ! -d "$dst" ]
     then
+        # dstdir="$(dirname "$dst")"
+        # if [ ! -d "$dstdir" ]
+        # then
+        #     success "Creating directory $dstdir"
+        #     mkdir -p "$dstdir"
+        # fi
         ln -s "$src" "$dst"
         # should check for actual success....
         success "Symlinked $src to $dst"
