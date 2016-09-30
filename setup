@@ -73,6 +73,7 @@ install_symlink "$DOTFILES_ROOT/.gitconfig" "$HOME/.gitconfig"
 install_symlink "$DOTFILES_ROOT/.gitignore-global" "$HOME/.gitignore-global"
 install_symlink "$DOTFILES_ROOT/Brewfile" "$HOME/Brewfile"
 install_symlink "$DOTFILES_ROOT/karabiner/private.xml" "$HOME/Library/Application Support/Karabiner/private.xml"
+install_symlink "$DOTFILES_ROOT/.hammerspoon" "$HOME/.hammerspoon"
 
 SUBLIME_USER_ROOT="$HOME/Library/Application Support/Sublime Text 3/Packages/User"
 for name in "Default (OSX).sublime-keymap" "Preferences.sublime-settings"
