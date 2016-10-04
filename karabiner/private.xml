@@ -1,3 +1,17 @@
 <?xml version="1.0"?>
 <root>
+  <item>
+    <name>Vi-like j/k</name>
+    <identifier>local.vijk</identifier>
+    <autogen>
+      --KeyToKey--
+      KeyCode::J, ModifierFlag::CONTROL_L | ModifierFlag::COMMAND_L,
+      KeyCode::CURSOR_DOWN
+    </autogen>
+    <autogen>
+      --KeyToKey--
+      KeyCode::K, ModifierFlag::CONTROL_L | ModifierFlag::COMMAND_L,
+      KeyCode::CURSOR_UP
+    </autogen>
+  </item>
 </root>
