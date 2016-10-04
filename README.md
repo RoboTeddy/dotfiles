@@ -1,5 +1,7 @@
 # If you don't want to use this whole setup, and just want to limit your internet on a schedule...
 
+(it'll be a bit messy, because this setup wasn't designed with anyone else in mind)
+
 ## Scripts to add to a directory in your system's `PATH`
 
 ### internet-off
@@ -10,18 +12,29 @@ https://github.com/RoboTeddy/dotfiles/blob/master/bin/internet-on
 
 ### on-system-login
 This script is run when you log in; it calls internet-off
+
 https://github.com/RoboTeddy/dotfiles/blob/master/bin/on-system-login
 
 
 ### internet-temporarily
 Call this like `internet-temporarily 3` to get 3 minutes of internet. If you kill the script early with CTRL-C, the internet will turn back off.
+
 https://github.com/RoboTeddy/dotfiles/blob/master/bin/internet-temporarily
 
+## Firewall configuration scripts
+
+Put thesetwo  files somewhere:
+
+https://github.com/RoboTeddy/dotfiles/blob/master/pf/workmode.conf
+https://github.com/RoboTeddy/dotfiles/blob/master/pf/workmode.pf.rules
+
+And modify the path inside the first to point to the second. Also update the path inside `internet-off`.
 
 ## Launchd files to run the above scripts on a schedule
 Edit these to control the time that the internet turns on or off. For documentation on the syntax, see http://launchd.info/
 
 Copy these files:
+
 https://github.com/RoboTeddy/dotfiles/blob/master/cron/local.internet-off.plist
 https://github.com/RoboTeddy/dotfiles/blob/master/cron/local.internet-on.plist
 https://github.com/RoboTeddy/dotfiles/blob/master/cron/local.on-system-login.plist
