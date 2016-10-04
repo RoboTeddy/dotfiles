@@ -23,7 +23,7 @@ hs.hotkey.bind(cc, "s", function ()
     end
   end
 
-  task = hs.task.new("/bin/bash", cb, {"-lic", "screenshot"})
+  local task = hs.task.new("/bin/bash", cb, {"-lic", "screenshot"})
   task:start()
 end)
 
@@ -31,7 +31,7 @@ end)
 -- Application hotkeys
 --
 
-function toggle_app(hint)
+function toggleApp(hint)
   local app = hs.application.get(hint)
   if not app then
     hs.application.open(hint)
@@ -47,10 +47,16 @@ function toggle_app(hint)
   end
 end
 
-hs.hotkey.bind(cc, "e", function() toggle_app("Sublime Text") end)
-hs.hotkey.bind(cc, "t", function() toggle_app("Things") end)
-hs.hotkey.bind(cc, "c", function() toggle_app("Google Chrome") end)
-hs.hotkey.bind(cc, "i", function() toggle_app("iTerm") end)
+local shortcuts = {
+  "e" = "Sublime Text",
+  "t" = "Things",
+  "c" = "Google Chrome",
+  "i" = "iTerm"
+}
+
+for key, appName in pairs(shortcuts) do
+  hs.hotkey.bind(cc, key, function() toggleApp(appName) end)
+end
 
 --
 -- Window manipulation
@@ -90,7 +96,7 @@ end)
 
 
 -- Left 1/4 of the screen
-hs.hotkey.bind(cc, "Left", gridset(0, 0, 1, 2))
+hs.hotkey.bind(cc, "l", gridset(0, 0, 1, 2))
 
 -- Right 3/4 of the screen
-hs.hotkey.bind(cc, "Right", gridset(1, 0, 3, 2))
+hs.hotkey.bind(cc, "r", gridset(1, 0, 3, 2))
