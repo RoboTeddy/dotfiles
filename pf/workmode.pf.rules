@@ -37,6 +37,10 @@ pass out inet proto tcp from any to any port 22 keep state
 pass in inet proto { tcp, udp } from any to any port 53 keep state  
 pass out inet proto { tcp, udp } from any to any port 53 keep state 
 
+
+# Note: can use osx Radio Silence app to easily look up which applications
+# are connecting where.
+
 # s3.amazonaws.com for uploading screenshots
 # fonts.googleapis.com for workflowy. 52.72.169.121 is workflowy's ip
 table <misc> { \
@@ -45,6 +49,12 @@ table <misc> { \
   fonts.googleapis.com, \
   10.1.10.1, \
   52.72.169.121 \
+}
+
+# Things 2
+table <things> { \
+  ec2-52-33-164-118.us-west-2.compute.amazonaws.com, \
+  ec2-52-87-8-91.compute-1.amazonaws.com \
 }
 
 # http://bgp.he.net/search?search%5Bsearch%5D=spotify&commit=Search
@@ -93,6 +103,9 @@ table <spotify> { \
 
 pass in inet proto tcp from <spotify> to any
 pass out inet proto tcp from any to <spotify>
+
+pass in inet proto tcp from <things> to any
+pass out inet proto tcp from any to <things>
 
 pass in inet proto tcp from <misc> to any
 pass out inet proto tcp from any to <misc>
