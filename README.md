@@ -5,6 +5,8 @@
 ## Scripts to add to a directory in your system's `PATH`
 
 ### internet-off
+(the path inside this file will need to be modified-- just follow the instructions in order and you'll get to it)
+
 https://github.com/RoboTeddy/dotfiles/blob/master/bin/internet-off
 
 ### internet-on
