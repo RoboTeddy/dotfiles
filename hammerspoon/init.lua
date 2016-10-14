@@ -47,12 +47,7 @@ function toggleApp(hint)
   end
 end
 
-local shortcuts = {
-  "e" = "Sublime Text",
-  "t" = "Things",
-  "c" = "Google Chrome",
-  "i" = "iTerm"
-}
+local shortcuts = {e="Sublime Text", t="Things", c="Google Chrome", i="iTerm"}
 
 for key, appName in pairs(shortcuts) do
   hs.hotkey.bind(cc, key, function() toggleApp(appName) end)
