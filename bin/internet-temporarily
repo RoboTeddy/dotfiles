@@ -1,10 +1,27 @@
 #!/bin/sh
 
+# temporarily kill messaging apps so I don't get sidetracked
+messengers_to_restore=()
+for app in "Viber" "Adium" "Slack" "Messages"; do
+  if pgrep $app; then
+    echo "Killing $app"
+    killall "$app"
+    messengers_to_restore+=("$app")
+  fi
+done
+
 minutes=$1
 
 function finish () {
-  echo "finishing..."
+  echo "Finishing..."
   internet-off
+  for app in "${messengers_to_restore[@]}"; do
+    echo "Relaunching $app"
+    # Viber is rude and refuses to start hidden, so we don't restore it
+    if [ "$app" != "Viber" ]; then
+      open --hide "/Applications/$app.app/"
+    fi
+  done
 }
 
 trap finish EXIT
