@@ -15,7 +15,8 @@ source "`brew --prefix`/etc/grc.bashrc"
 
 ### Pyenv
 
-eval "$(pyenv init -)"
+# makes loading slow... do this in the background? is that possible?
+# eval "$(pyenv init -)"
 
 
 ### Java
@@ -102,6 +103,6 @@ extract () {
 bind "set completion-ignore-case on"
 bind "set show-all-if-ambiguous on"
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
-fi
+#if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    #. $(brew --prefix)/etc/bash_completion
+#fi
