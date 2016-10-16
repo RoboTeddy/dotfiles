@@ -173,6 +173,11 @@ source ~/.bash_profile
 success 'Done!'
 
 echo ""
-echo "If you haven't already, make Seil and Karabiner look like this: "
-echo "https://roboteddy-img.s3.amazonaws.com/48ae7592e808e11033f15f8b2cd59b73.png"
+echo "If you haven't already, configure Seil like this:"
+echo "https://rt-ss.s3.amazonaws.com/f423d250b3470f.png"
+echo ""
+
+echo ""
+echo "If you haven't already, configure iTerm2 like this:"
+echo "https://rt-ss.s3.amazonaws.com/7dcdf8a2427944.png"
 echo ""
