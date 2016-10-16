@@ -12,6 +12,32 @@ export MANPATH="/usr/local/man:/usr/local/git/man:$MANPATH"
 
 source "`brew --prefix`/etc/grc.bashrc"
 
+colored_printf () {
+    printf "\001\033[0;$1m\002$2\001\033[0m\002"
+}
+
+function git_branch {
+    # http://stackoverflow.com/a/2185353
+    if git rev-parse --git-dir > /dev/null 2>&1
+    then
+        # http://unix.stackexchange.com/a/155077
+        if [ -z "$(git status --porcelain)" ]
+        then # Working directory clean
+          local color="32" # green
+        else # Uncommitted changes
+          local color="31" # red
+        fi
+
+        if branch=$(git symbolic-ref --short -q HEAD)
+        then
+            colored_printf "$color" " $branch"
+        else
+            colored_printf "$color" " (no branch)"
+        fi
+    fi
+}
+
+export PS1="[\w\$(git_branch)]\$ "
 
 ### Pyenv
 
