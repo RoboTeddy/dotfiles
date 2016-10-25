@@ -11,7 +11,7 @@
 	<key>Default Arrangement Name</key>
 	<string>Default</string>
 	<key>Default Bookmark Guid</key>
-	<string>A333BDCB-882E-4D7D-A3BD-A7CF818270B4</string>
+	<string>BCFFBEE0-8F6F-450A-BC56-901E63A0F05D</string>
 	<key>DimBackgroundWindows</key>
 	<false/>
 	<key>DimInactiveSplitPanes</key>
@@ -174,9 +174,11 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>269 93 606 456 0 0 2560 1577 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>852 606 796 473 0 0 2560 1577 </string>
+	<string>809 580 796 473 0 0 2560 1577 </string>
+	<key>NSWindow Frame UKCrashReporter</key>
+	<string>230 993 592 584 0 0 2560 1577 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 50 634 1527 0 0 2560 1577 </string>
+	<string>1737 311 585 452 0 0 2560 1577 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>734 989 585 452 0 0 2560 1577 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -250,6 +252,8 @@
 	<true/>
 	<key>SplitPaneDimmingAmount</key>
 	<real>0.34273337339743593</real>
+	<key>UKCrashReporterLastCrashReportDate</key>
+	<real>1477428736</real>
 	<key>UseBorder</key>
 	<false/>
 	<key>Window Arrangements</key>
@@ -513,7 +517,7 @@
 												<real>0.73333334922790527</real>
 											</dict>
 											<key>Guid</key>
-											<string>5AE64C29-0389-4E42-B660-6121838AA868</string>
+											<string>A3933776-05FB-4388-8D10-3D8436038FB7</string>
 											<key>Horizontal Spacing</key>
 											<real>1</real>
 											<key>Idle Code</key>
@@ -811,7 +815,7 @@
 											<key>Mouse Reporting</key>
 											<true/>
 											<key>Name</key>
-											<string>Default</string>
+											<string>RoboSchool</string>
 											<key>Non Ascii Font</key>
 											<string>Monaco 12</string>
 											<key>Non-ASCII Anti Aliased</key>
@@ -821,7 +825,7 @@
 											<key>Option Key Sends</key>
 											<integer>0</integer>
 											<key>Original Guid</key>
-											<string>EA3C1307-35B3-4829-8A88-B778CB4A7216</string>
+											<string>E641861C-F1BF-41B2-9220-032FD7B99B8C</string>
 											<key>Prompt Before Closing 2</key>
 											<false/>
 											<key>Right Option Key Sends</key>
@@ -908,15 +912,13 @@
 										<key>Rows</key>
 										<integer>42</integer>
 										<key>Server PID</key>
-										<integer>27860</integer>
+										<integer>50073</integer>
 										<key>Session Default Name</key>
-										<string>Default</string>
+										<string>RoboSchool</string>
 										<key>Session GUID</key>
 										<string>13C75A18-0EDE-418B-BBEB-46BF89FB63AB</string>
 										<key>Session Name</key>
-										<string>Default</string>
-										<key>Session Window Title</key>
-										<string>Default</string>
+										<string>RoboSchool</string>
 										<key>Shell Integration Ever Used</key>
 										<false/>
 										<key>Substitutions</key>
@@ -1169,7 +1171,7 @@
 												<real>0.73333334922790527</real>
 											</dict>
 											<key>Guid</key>
-											<string>E31100C0-CA72-4597-B8F8-D4071010625D</string>
+											<string>60135EB6-B544-4744-BBAC-149343168735</string>
 											<key>Horizontal Spacing</key>
 											<real>1</real>
 											<key>Idle Code</key>
@@ -1477,7 +1479,7 @@
 											<key>Option Key Sends</key>
 											<integer>0</integer>
 											<key>Original Guid</key>
-											<string>31A74FA5-8B1B-457F-AE58-54A5296881BF</string>
+											<string>386CA2D6-B35D-42A2-9618-15B5B6661924</string>
 											<key>Prompt Before Closing 2</key>
 											<false/>
 											<key>Right Option Key Sends</key>
@@ -1564,7 +1566,7 @@
 										<key>Rows</key>
 										<integer>42</integer>
 										<key>Server PID</key>
-										<integer>27862</integer>
+										<integer>50075</integer>
 										<key>Session Default Name</key>
 										<string>Default</string>
 										<key>Session GUID</key>
@@ -1848,7 +1850,7 @@
 												<real>0.73333334922790527</real>
 											</dict>
 											<key>Guid</key>
-											<string>66DBCD6C-795D-4D07-B804-7FEC3109610F</string>
+											<string>1C6C13A0-7562-4511-94F8-FBF086899372</string>
 											<key>Horizontal Spacing</key>
 											<real>1</real>
 											<key>Idle Code</key>
@@ -2146,7 +2148,7 @@
 											<key>Mouse Reporting</key>
 											<true/>
 											<key>Name</key>
-											<string>Default</string>
+											<string>RoboTeddy.com</string>
 											<key>Non Ascii Font</key>
 											<string>Monaco 12</string>
 											<key>Non-ASCII Anti Aliased</key>
@@ -2156,7 +2158,7 @@
 											<key>Option Key Sends</key>
 											<integer>0</integer>
 											<key>Original Guid</key>
-											<string>55CDCAAC-B9FD-4186-A38A-DFA66688C5A6</string>
+											<string>EBA871B4-AA84-4F68-B52D-BCBDBD31B923</string>
 											<key>Prompt Before Closing 2</key>
 											<false/>
 											<key>Right Option Key Sends</key>
@@ -2243,15 +2245,13 @@
 										<key>Rows</key>
 										<integer>87</integer>
 										<key>Server PID</key>
-										<integer>27870</integer>
+										<integer>50083</integer>
 										<key>Session Default Name</key>
-										<string>Default</string>
+										<string>RoboTeddy.com</string>
 										<key>Session GUID</key>
 										<string>1304A636-9F99-454A-ADBC-3F7E6A534504</string>
 										<key>Session Name</key>
-										<string>Default</string>
-										<key>Session Window Title</key>
-										<string>Default</string>
+										<string>RoboTeddy.com</string>
 										<key>Shell Integration Ever Used</key>
 										<false/>
 										<key>Substitutions</key>
@@ -2527,7 +2527,7 @@
 												<real>0.73333334922790527</real>
 											</dict>
 											<key>Guid</key>
-											<string>B185771E-4D2E-457F-A0E6-672892E4F248</string>
+											<string>F3281F9B-D61A-4BE1-BD90-A6F730137C47</string>
 											<key>Horizontal Spacing</key>
 											<real>1</real>
 											<key>Idle Code</key>
@@ -2825,7 +2825,7 @@
 											<key>Mouse Reporting</key>
 											<true/>
 											<key>Name</key>
-											<string>Default</string>
+											<string>dotfiles</string>
 											<key>Non Ascii Font</key>
 											<string>Monaco 12</string>
 											<key>Non-ASCII Anti Aliased</key>
@@ -2835,7 +2835,7 @@
 											<key>Option Key Sends</key>
 											<integer>0</integer>
 											<key>Original Guid</key>
-											<string>ECDB5D65-8833-482A-A1D5-DF7D46CFC18E</string>
+											<string>892E526E-8BF7-48AC-A865-495D0AFE5D3B</string>
 											<key>Prompt Before Closing 2</key>
 											<false/>
 											<key>Right Option Key Sends</key>
@@ -2922,15 +2922,13 @@
 										<key>Rows</key>
 										<integer>87</integer>
 										<key>Server PID</key>
-										<integer>27897</integer>
+										<integer>50119</integer>
 										<key>Session Default Name</key>
-										<string>Default</string>
+										<string>dotfiles</string>
 										<key>Session GUID</key>
 										<string>81ECA50C-62FF-442E-97CC-F0EB6F831105</string>
 										<key>Session Name</key>
-										<string>Default</string>
-										<key>Session Window Title</key>
-										<string>Default</string>
+										<string>dotfiles</string>
 										<key>Shell Integration Ever Used</key>
 										<false/>
 										<key>Substitutions</key>
