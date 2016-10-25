@@ -53,9 +53,9 @@ brew bundle
 
 ### Pyenv
 
-pyenv install -s 3.5.2
-pyenv global 3.5.2
-pip install --upgrade pip
+# pyenv install -s 3.5.2
+# pyenv global 3.5.2
+# pip install --upgrade pip
 
 
 ### Dependency for bin/screenshot
