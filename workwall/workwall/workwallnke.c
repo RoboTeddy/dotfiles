@@ -34,7 +34,7 @@ static lck_mtx_t *g_mutex = NULL;
 static lck_grp_t *g_mutex_group = NULL;
 static OSMallocTag g_osm_tag;
 
-static boolean_t g_enabled = false; // protected by g_mutex
+static int g_enabled = 0; // protected by g_mutex
 static uint32_t g_ctl_connections = 0;
 
 static boolean_t g_filter_registered_ip4 = FALSE;
@@ -98,6 +98,28 @@ typedef struct TCPEntry TCPEntry;
 
 #pragma mark  Utility functions
 
+static void ww_info(const char *fmt, ...)
+{
+    va_list listp;
+    char log_buffer[92];
+    va_start(listp, fmt);
+    vsnprintf(log_buffer, sizeof(log_buffer), fmt, listp);
+    printf("workwall %s", log_buffer);
+    va_end(listp);
+}
+
+static void ww_debug(const char *fmt, ...)
+{
+#if DEBUG
+    va_list listp;
+    char log_buffer[92];
+    va_start(listp, fmt);
+    vsnprintf(log_buffer, sizeof(log_buffer), fmt, listp);
+    printf("workwall %s", log_buffer);
+    va_end(listp);
+#endif
+}
+
 static struct TCPEntry * TCPEntryFromCookie(void *cookie) {
     struct TCPEntry *result;
     result = (struct TCPEntry *) cookie;
@@ -116,39 +138,64 @@ static void log_ip_and_port_addr(struct sockaddr_in* addr)
 
 #pragma mark Connection Permissions
 
-static boolean_t may_connect_in(struct TCPEntry *entry, const struct sockaddr *from) {
-    printf("workwall allowing incoming connection\n");
+/*
+static boolean_t is_allowed(struct TCPEntry *entry, const struct sockaddr *from) {
+    ww_debug("allowing incoming connection\n");
     return true;
 }
+*/
 
-static boolean_t may_connect_out(struct TCPEntry *entry, const struct sockaddr *to) {
-    
-    // this kind of thing should come over ctl socket from userland,
-    // and should be built into a radix tree. or something.
-    if (strcmp(entry->te_pname, "Spotify") == 0) {
-        return true;
-    }
-    if (strcmp(entry->te_pname, "Things") == 0) {
-        return true;
-    }
-    if (strcmp(entry->te_pname, "ruby") == 0) { // for screenshot uploading
-        return true;
-    }
-    if (strcmp(entry->te_pname, "bztransmit") == 0) { // backblaze backups
+// this kind of thing should come over ctl socket from userland,
+// and should be built into a radix tree. or something.
+static boolean_t is_pname_allowed(char *name) {
+    if (strcmp(name, "Spotify") == 0) return true;
+    if (strcmp(name, "Things") == 0) return true;
+    if (strcmp(name, "ruby") == 0) return true; // for screenshot uploading
+    if (strcmp(name, "bztransmit") == 0) return true; // backblaze backups
+    return false;
+}
+
+// if TCP connection is already established, `from` will be NULL
+static boolean_t can_in(struct TCPEntry *entry, const struct sockaddr *from) {
+    if (is_pname_allowed(entry->te_pname)) {
         return true;
     }
 
     if (entry->te_protocol == AF_INET) {
         // ip4
-        printf("workwall blocking ip4 connection from (%s) to: ", entry->te_pname);
-        log_ip_and_port_addr((struct sockaddr_in*)to);
+        ww_debug("blocking ip4 (%s) from: ", entry->te_pname);
+        if (from) {
+            log_ip_and_port_addr((struct sockaddr_in*)from);
+        }
     }
     else {
         // ip6
-        printf("workwall blocking ip6 connection to somewhere\n");
+        ww_debug("blocking ip6 (%s)\n", entry->te_pname);
     }
     return false;
 }
+
+// if TCP connection is already established, `to` will be NULL
+static boolean_t can_out(struct TCPEntry *entry, const struct sockaddr *to) {
+    if (is_pname_allowed(entry->te_pname)) {
+        return true;
+    }
+    
+    if (entry->te_protocol == AF_INET) {
+        // ip4
+        ww_debug("blocking ip4 (%s) to: ", entry->te_pname);
+        
+        if (to) {
+            log_ip_and_port_addr((struct sockaddr_in*)to);
+        }
+    }
+    else {
+        // ip6
+        ww_debug("blocking ip6 (%s)\n", entry->te_pname);
+    }
+    return false;
+}
+
 
 #pragma mark Socket Filter Functions
 
@@ -177,7 +224,7 @@ static void ww_attach_locked(socket_t so, struct TCPEntry *entry)
     entry->te_pid = proc_selfpid();
     proc_selfname(entry->te_pname, PNAME_MAX);
     //entry->te_uid = kauth_getuid();
-    printf("workwall attaching to socket for process: %s\n", entry->te_pname);
+    ww_debug("attaching to socket for process: %s\n", entry->te_pname);
     TAILQ_INSERT_TAIL(&tcp_entries, entry, link);
 }
 
@@ -277,12 +324,108 @@ static void ww_detach(void *cookie, socket_t so)
  */
 static void ww_unregistered_ip4(sflt_handle handle) {
     g_filter_registered_ip4 = FALSE;
-    printf("workwall unregistered (ip4)\n");
+    ww_info("unregistered (ip4)\n");
 }
 
 static void ww_unregistered_ip6(sflt_handle handle) {
     g_filter_registered_ip6 = FALSE;
-    printf("workwall unregistered (ip6)\n");
+    ww_info("unregistered (ip6)\n");
+}
+
+/*
+ @typedef sf_data_in_func
+	
+ @discussion sf_data_in_func is called to filter incoming data. If
+ your filter intercepts data for later reinjection, it must queue
+ all incoming data to preserve the order of the data. Use
+ sock_inject_data_in to later reinject this data if you return
+ EJUSTRETURN. Warning: This filter is on the data path, do not
+ block or spend excessive time.
+ @param cookie Cookie value specified when the filter attach was
+ called.
+ @param so The socket the filter is attached to.
+ @param from The addres the data is from, may be NULL if the socket
+ is connected.
+ @param data The data being received. Control data may appear in the
+ mbuf chain, be sure to check the mbuf types to find control
+ data.
+ @param control Control data being passed separately from the data.
+ @param flags Flags to indicate if this is out of band data or a
+ record.
+ @result Return:
+ 0 - The caller will continue with normal processing of the data.
+ EJUSTRETURN - The caller will stop processing the data, the data will not be freed.
+ Anything Else - The caller will free the data and stop processing.
+ 
+ Note: as this is a TCP connection, the "from" parameter will be NULL - for UDP, the
+ "from" field will point to a valid sockaddr structure. In this case, you must copy
+ the contents of the "from" field to local memory when swallowing the packet so that
+ you have a valid sockaddr to pass in the inject call.
+ */
+static errno_t ww_data_in(void *cookie, socket_t so, const struct sockaddr *from,
+                             mbuf_t *data, mbuf_t *control, sflt_data_flag_t flags) {
+    struct TCPEntry	*entry = (struct TCPEntry *) cookie;
+    
+    if (from) { // see note above
+        ww_info("ERROR - to field not NULL!");
+    }
+    
+    if (!g_enabled || can_in(entry, NULL)) {
+        return 0; // allow
+    }
+    else {
+        ww_debug("Blocking a data packet for %s", entry->te_pname);
+        return 1; //block
+    }
+}
+
+
+/*
+ @typedef sf_data_out_func
+
+ @discussion sf_data_out_func is called to filter outbound data. If
+ your filter intercepts data for later reinjection, it must queue
+ all outbound data to preserve the order of the data when
+ reinjecting. Use sock_inject_data_out to later reinject this
+ data. Warning: This filter is on the data path, do not block or
+ spend excessive time.
+ @param cookie Cookie value specified when the filter attach was
+ called.
+ @param so The socket the filter is attached to.
+ @param from The address the data is from, may be NULL if the socket
+ is connected.
+ @param data The data being received. Control data may appear in the
+ mbuf chain, be sure to check the mbuf types to find control
+ data.
+ @param control Control data being passed separately from the data.
+ @param flags Flags to indicate if this is out of band data or a
+ record.
+ @result Return:
+ 0 - The caller will continue with normal processing of the data.
+ EJUSTRETURN - The caller will stop processing the data, the data will not be freed.
+ Anything Else - The caller will free the data and stop processing.
+
+ Note: as this is a TCP connection, the "to" parameter will be NULL - for UDP, the
+ "to" field will point to a valid sockaddr structure. In this case, you must copy
+ the contents of the "to" field to local memory when swallowing the packet so that
+ you have a valid sockaddr to pass in the inject call.
+ */
+
+static errno_t ww_data_out(void *cookie, socket_t so, const struct sockaddr *to,
+                           mbuf_t *data, mbuf_t *control, sflt_data_flag_t flags) {
+    struct TCPEntry	*entry = (struct TCPEntry *) cookie;
+
+    if (to) { // see note above
+        ww_info("ERROR - to field not NULL!");
+    }
+    
+    if (!g_enabled || can_out(entry, NULL)) {
+        return 0; // allow
+    }
+    else {
+        ww_debug("Blocking a data packet for %s", entry->te_pname);
+        return 1; //block
+    }
 }
 
 
@@ -302,6 +445,7 @@ static void ww_unregistered_ip6(sflt_handle handle) {
  0 - The caller will continue with normal processing of the connection.
  Anything Else - The caller will rejecting the incoming connection.
  */
+
 static errno_t ww_connect_in(void *cookie, socket_t so, const struct sockaddr *from)
 {
     struct TCPEntry *entry = TCPEntryFromCookie(cookie);
@@ -309,13 +453,14 @@ static errno_t ww_connect_in(void *cookie, socket_t so, const struct sockaddr *f
     assert((from->sa_family == AF_INET) || (from->sa_family == AF_INET6));
     //OSBitOrAtomic(TCPINFO_CONNECT_IN, (UInt32*)&(entry->state)); // not used
     
-    if(may_connect_in(entry, from)) {
+    if(!g_enabled || can_in(entry, from)) {
         return 0; // allow
     }
     else {
         return EPERM; // block
     }
 }
+
 
 /*!
  @typedef sf_connect_out_func
@@ -339,13 +484,15 @@ static errno_t ww_connect_out(void *cookie, socket_t so, const struct sockaddr *
     assert((from->sa_family == AF_INET) || (from->sa_family == AF_INET6));
     //OSBitOrAtomic(TCPINFO_CONNECT_IN, (UInt32*)&(entry->state)); // not used
     
-    if(may_connect_out(entry, to)) {
+    if(!g_enabled || can_out(entry, to)) {
         return 0; // allow
     }
     else {
         return EPERM; // block
     }
 }
+
+
 
 #pragma mark tcplog Filter Definition
 
@@ -362,8 +509,8 @@ static struct sflt_filter socket_tcp_filter_ip4 = {
     NULL,
     NULL,
     NULL,
-    NULL,
-    NULL,
+    ww_data_in,
+    ww_data_out,
     ww_connect_in,
     ww_connect_out,
     NULL,
@@ -383,8 +530,8 @@ static struct sflt_filter socket_tcp_filter_ip6 = {
     NULL,
     NULL,
     NULL,
-    NULL,
-    NULL,
+    ww_data_in,
+    ww_data_out,
     ww_connect_in,
     ww_connect_out,
     NULL,
@@ -421,7 +568,7 @@ static errno_t ctl_connect(kern_ctl_ref ctl_ref, struct sockaddr_ctl *sac, void 
  */
 
 static errno_t ctl_disconnect(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitinfo) {
-    ww_printf("ctl_disconnect\n");
+    ww_info("ctl_disconnect\n");
     OSDecrementAtomic((SInt32*)&g_ctl_connections);
     return 0;
 }
@@ -496,7 +643,7 @@ static int ctl_set(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitinfo, int opt
     int error = 0;
     int intval;
     
-    ww_printf("ctl_set - opt is %d\n", opt);
+    ww_info("ctl_set - opt is %d\n", opt);
     
     switch (opt)
     {
@@ -582,11 +729,11 @@ extern kern_return_t workwall_start (kmod_info_t *ki, void *data) {
     }
     
     
-    printf("workwall started\n");
+    ww_info("started\n");
     
     return KERN_SUCCESS;
 bail:
-    printf("workwall bailing on start; something wrong\n");
+    ww_info("bailing on start; something wrong\n");
     if (g_filter_registered_ip4) {
         sflt_unregister(WORKWALL_FLT_TCP_HANDLE_IP4);
         g_filter_registered_ip4 = FALSE;
@@ -649,13 +796,13 @@ extern kern_return_t workwall_stop (kmod_info_t *ki, void *data)
     
     // if filter still not unregistered defer stop.
     if (g_filter_registered_ip4) {
-        printf("workwall waiting to stop (ip4)\n");
+        ww_info("waiting to stop (ip4)\n");
         return EBUSY;
     }
     
     // if filter still not unregistered defer stop.
     if (g_filter_registered_ip6) {
-        printf("workwall waiting to stop (ip6)\n");
+        ww_info("waiting to stop (ip6)\n");
         return EBUSY;
     }
     
@@ -675,7 +822,7 @@ extern kern_return_t workwall_stop (kmod_info_t *ki, void *data)
     OSMalloc_Tagfree(g_osm_tag);
     g_osm_tag = NULL;
     
-    printf("workwall stopped\n");
+    ww_info("stopped\n");
     
     return KERN_SUCCESS;
 }
