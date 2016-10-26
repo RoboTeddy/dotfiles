@@ -165,36 +165,36 @@ static boolean_t is_pname_allowed(char *name) {
 
 static boolean_t can_connect_in(struct TCPEntry *entry, const struct sockaddr *from) {
     if (is_pname_allowed(entry->te_pname)) {
-        ww_debug("allowing in due to pname (%s)\n", entry->te_pname);
+        ww_debug("allowed in due to pname (%s)\n", entry->te_pname);
         return true;
     }
 
     if (entry->te_protocol == AF_INET) {
         // ip4
-        ww_debug("blocking ip4 (%s) from: ", entry->te_pname);
+        ww_debug("disallowed in ip4 (%s) from: ", entry->te_pname);
         log_ip_and_port_addr((struct sockaddr_in*)from);
     }
     else {
         // ip6
-        ww_debug("blocking ip6 (%s)\n", entry->te_pname);
+        ww_debug("disallowed in ip6 (%s)\n", entry->te_pname);
     }
     return false;
 }
 
 static boolean_t can_connect_out(struct TCPEntry *entry, const struct sockaddr *to) {
     if (is_pname_allowed(entry->te_pname)) {
-        ww_debug("allowing out due to pname (%s)\n", entry->te_pname);
+        ww_debug("allowed out due to pname (%s)\n", entry->te_pname);
         return true;
     }
     
     if (entry->te_protocol == AF_INET) {
         // ip4
-        ww_debug("blocking ip4 (%s) to: ", entry->te_pname);
+        ww_debug("disallowed out ip4 (%s) to: ", entry->te_pname);
         log_ip_and_port_addr((struct sockaddr_in*)to);
     }
     else {
         // ip6
-        ww_debug("blocking ip6 (%s)\n", entry->te_pname);
+        ww_debug("disallowed out ip6 (%s)\n", entry->te_pname);
     }
     return false;
 }

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		9F62BF831DC021E3004611CC /* workwallnke.c in Sources */ = {isa = PBXBuildFile; fileRef = 9F62BF821DC021E3004611CC /* workwallnke.c */; };
 		9F62BF8B1DC02F9C004611CC /* workwallnke.kext in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9F62BF7F1DC021E3004611CC /* workwallnke.kext */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9FC2920B1DC1724000032528 /* workwallctl in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FC291FE1DC1675F00032528 /* workwallctl */; };
+		9FC2920D1DC1729100032528 /* workwallctl.c in Sources */ = {isa = PBXBuildFile; fileRef = 9FC2920C1DC1729100032528 /* workwallctl.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -22,6 +24,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9FC292091DC1722B00032528 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${PROJECT_DIR}/build";
+			dstSubfolderSpec = 0;
+			files = (
+				9FC2920B1DC1724000032528 /* workwallctl in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -29,10 +41,19 @@
 		9F62BF821DC021E3004611CC /* workwallnke.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = workwallnke.c; sourceTree = "<group>"; };
 		9F62BF841DC021E3004611CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9FC291F91DC13BBA00032528 /* workwall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = workwall.h; sourceTree = "<group>"; };
+		9FC291FE1DC1675F00032528 /* workwallctl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = workwallctl; sourceTree = BUILT_PRODUCTS_DIR; };
+		9FC2920C1DC1729100032528 /* workwallctl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = workwallctl.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		9F62BF7B1DC021E3004611CC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9FC291FB1DC1675F00032528 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -54,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				9F62BF7F1DC021E3004611CC /* workwallnke.kext */,
+				9FC291FE1DC1675F00032528 /* workwallctl */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -64,6 +86,7 @@
 				9F62BF821DC021E3004611CC /* workwallnke.c */,
 				9F62BF841DC021E3004611CC /* Info.plist */,
 				9FC291F91DC13BBA00032528 /* workwall.h */,
+				9FC2920C1DC1729100032528 /* workwallctl.c */,
 			);
 			path = workwall;
 			sourceTree = "<group>";
@@ -100,6 +123,23 @@
 			productReference = 9F62BF7F1DC021E3004611CC /* workwallnke.kext */;
 			productType = "com.apple.product-type.kernel-extension";
 		};
+		9FC291FD1DC1675F00032528 /* workwallctl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9FC292021DC1675F00032528 /* Build configuration list for PBXNativeTarget "workwallctl" */;
+			buildPhases = (
+				9FC291FA1DC1675F00032528 /* Sources */,
+				9FC291FB1DC1675F00032528 /* Frameworks */,
+				9FC292091DC1722B00032528 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = workwallctl;
+			productName = workwallctl;
+			productReference = 9FC291FE1DC1675F00032528 /* workwallctl */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -110,6 +150,11 @@
 				ORGANIZATIONNAME = "Ted Suzman";
 				TargetAttributes = {
 					9F62BF7E1DC021E3004611CC = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = X82CCH88CU;
+						ProvisioningStyle = Automatic;
+					};
+					9FC291FD1DC1675F00032528 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = X82CCH88CU;
 						ProvisioningStyle = Automatic;
@@ -129,6 +174,7 @@
 			projectRoot = "";
 			targets = (
 				9F62BF7E1DC021E3004611CC /* workwallnke */,
+				9FC291FD1DC1675F00032528 /* workwallctl */,
 			);
 		};
 /* End PBXProject section */
@@ -149,6 +195,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F62BF831DC021E3004611CC /* workwallnke.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9FC291FA1DC1675F00032528 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9FC2920D1DC1729100032528 /* workwallctl.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +326,22 @@
 			};
 			name = Release;
 		};
+		9FC292031DC1675F00032528 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = X82CCH88CU;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9FC292041DC1675F00032528 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = X82CCH88CU;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -292,6 +362,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		9FC292021DC1675F00032528 /* Build configuration list for PBXNativeTarget "workwallctl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9FC292031DC1675F00032528 /* Debug */,
+				9FC292041DC1675F00032528 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
