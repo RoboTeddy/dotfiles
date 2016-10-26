@@ -22,6 +22,8 @@
 	<string>Copyright © 2016 Ted Suzman. All rights reserved.</string>
 	<key>OSBundleLibraries</key>
 	<dict>
+		<key>com.apple.kpi.bsd</key>
+		<string>13.0</string>
 		<key>com.apple.kpi.libkern</key>
 		<string>13.0</string>
 	</dict>

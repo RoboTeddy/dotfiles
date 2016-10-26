@@ -8,7 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		9F62BF831DC021E3004611CC /* workwall.c in Sources */ = {isa = PBXBuildFile; fileRef = 9F62BF821DC021E3004611CC /* workwall.c */; };
+		9F62BF8B1DC02F9C004611CC /* workwall.kext in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9F62BF7F1DC021E3004611CC /* workwall.kext */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9F62BF8A1DC02F8B004611CC /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "${PROJECT_DIR}/build";
+			dstSubfolderSpec = 0;
+			files = (
+				9F62BF8B1DC02F9C004611CC /* workwall.kext in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		9F62BF7F1DC021E3004611CC /* workwall.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = workwall.kext; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +87,7 @@
 				9F62BF7B1DC021E3004611CC /* Frameworks */,
 				9F62BF7C1DC021E3004611CC /* Headers */,
 				9F62BF7D1DC021E3004611CC /* Resources */,
+				9F62BF8A1DC02F8B004611CC /* CopyFiles */,
 			);
 			buildRules = (
 			);
