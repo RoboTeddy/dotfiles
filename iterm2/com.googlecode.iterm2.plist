@@ -11,7 +11,7 @@
 	<key>Default Arrangement Name</key>
 	<string>Default</string>
 	<key>Default Bookmark Guid</key>
-	<string>BCFFBEE0-8F6F-450A-BC56-901E63A0F05D</string>
+	<string>79D92CDD-D888-4840-B0FA-E42DC1D56A6B</string>
 	<key>DimBackgroundWindows</key>
 	<false/>
 	<key>DimInactiveSplitPanes</key>
@@ -178,7 +178,7 @@
 	<key>NSWindow Frame UKCrashReporter</key>
 	<string>230 993 592 584 0 0 2560 1577 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>1737 311 585 452 0 0 2560 1577 </string>
+	<string>0 50 1523 1527 0 0 2560 1577 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>734 989 585 452 0 0 2560 1577 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
