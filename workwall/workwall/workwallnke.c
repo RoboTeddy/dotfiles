@@ -22,21 +22,30 @@
 #include <kern/debug.h>
 
 #include <libkern/OSMalloc.h>
+#include <libkern/OSAtomic.h>
 
 #include <sys/kern_control.h>
 
-#define BUNDLE_ID "local.roboteddy.workwall"
+#include "workwall.h"
+
 #define PNAME_MAX 30
 
 static lck_mtx_t *g_mutex = NULL;
 static lck_grp_t *g_mutex_group = NULL;
 static OSMallocTag g_osm_tag;
 
+static boolean_t g_enabled = false; // protected by g_mutex
+static uint32_t g_ctl_connections = 0;
+
 static boolean_t g_filter_registered_ip4 = FALSE;
 static boolean_t g_filter_unregister_started_ip4 = FALSE;
 
 static boolean_t g_filter_registered_ip6 = FALSE;
 static boolean_t g_filter_unregister_started_ip6 = FALSE;
+
+static boolean_t g_kern_ctl_registered = FALSE;
+
+static kern_ctl_ref g_ctl_ref;
 
 // TODO: might need to put struct defs above this...
 // list of tcp sockets
@@ -97,9 +106,7 @@ static struct TCPEntry * TCPEntryFromCookie(void *cookie) {
     return result;
 }
 
-#pragma mark  Connection Permissions
-
-// this is for ip4...
+// is this for ip4 only? check.
 static void log_ip_and_port_addr(struct sockaddr_in* addr)
 {
     unsigned char addstr[256];
@@ -107,14 +114,17 @@ static void log_ip_and_port_addr(struct sockaddr_in* addr)
     printf("%s:%d\n", addstr, ntohs(addr->sin_port));
 }
 
-boolean_t may_connect_in(struct TCPEntry *entry, const struct sockaddr *from) {
+#pragma mark Connection Permissions
+
+static boolean_t may_connect_in(struct TCPEntry *entry, const struct sockaddr *from) {
     printf("workwall allowing incoming connection\n");
     return true;
 }
 
-boolean_t may_connect_out(struct TCPEntry *entry, const struct sockaddr *to) {
+static boolean_t may_connect_out(struct TCPEntry *entry, const struct sockaddr *to) {
     
-    
+    // this kind of thing should come over ctl socket from userland,
+    // and should be built into a radix tree. or something.
     if (strcmp(entry->te_pname, "Spotify") == 0) {
         return true;
     }
@@ -128,16 +138,14 @@ boolean_t may_connect_out(struct TCPEntry *entry, const struct sockaddr *to) {
         return true;
     }
 
-    
-    
     if (entry->te_protocol == AF_INET) {
         // ip4
         printf("workwall blocking ip4 connection from (%s) to: ", entry->te_pname);
         log_ip_and_port_addr((struct sockaddr_in*)to);
     }
     else {
-        printf("workwall blocking ip6 connection to somewhere\n");
         // ip6
+        printf("workwall blocking ip6 connection to somewhere\n");
     }
     return false;
 }
@@ -169,7 +177,7 @@ static void ww_attach_locked(socket_t so, struct TCPEntry *entry)
     entry->te_pid = proc_selfpid();
     proc_selfname(entry->te_pname, PNAME_MAX);
     //entry->te_uid = kauth_getuid();
-    printf("workwall attaching to process: %s\n", entry->te_pname);
+    printf("workwall attaching to socket for process: %s\n", entry->te_pname);
     TAILQ_INSERT_TAIL(&tcp_entries, entry, link);
 }
 
@@ -269,12 +277,12 @@ static void ww_detach(void *cookie, socket_t so)
  */
 static void ww_unregistered_ip4(sflt_handle handle) {
     g_filter_registered_ip4 = FALSE;
-    printf("workwall unregistered ip4\n");
+    printf("workwall unregistered (ip4)\n");
 }
 
 static void ww_unregistered_ip6(sflt_handle handle) {
     g_filter_registered_ip6 = FALSE;
-    printf("workwall unregistered ip6\n");
+    printf("workwall unregistered (ip6)\n");
 }
 
 
@@ -297,7 +305,6 @@ static void ww_unregistered_ip6(sflt_handle handle) {
 static errno_t ww_connect_in(void *cookie, socket_t so, const struct sockaddr *from)
 {
     struct TCPEntry *entry = TCPEntryFromCookie(cookie);
-    in_port_t port;
     
     assert((from->sa_family == AF_INET) || (from->sa_family == AF_INET6));
     //OSBitOrAtomic(TCPINFO_CONNECT_IN, (UInt32*)&(entry->state)); // not used
@@ -328,7 +335,6 @@ static errno_t ww_connect_in(void *cookie, socket_t so, const struct sockaddr *f
 static errno_t ww_connect_out(void *cookie, socket_t so, const struct sockaddr *to)
 {
     struct TCPEntry *entry = TCPEntryFromCookie(cookie);
-    in_port_t port;
     
     assert((from->sa_family == AF_INET) || (from->sa_family == AF_INET6));
     //OSBitOrAtomic(TCPINFO_CONNECT_IN, (UInt32*)&(entry->state)); // not used
@@ -389,6 +395,148 @@ static struct sflt_filter socket_tcp_filter_ip6 = {
 };
 
 
+#pragma mark Control Functions
+
+
+static errno_t ctl_connect(kern_ctl_ref ctl_ref, struct sockaddr_ctl *sac, void **unitinfo) {
+    ww_info("ctl_connect - unit is %d\n", sac->sc_unit);
+    OSIncrementAtomic((SInt32*)&g_ctl_connections);
+    return 0;
+}
+
+
+/*!
+	@typedef ctl_disconnect_func
+	@discussion The ctl_disconnect_func is used to receive notification
+ that a client has disconnected from the kernel control. This
+ usually happens when the socket is closed. If this is the last
+ socket attached to your kernel control, you may unregister your
+ kernel control from this callback.
+	@param ctl_ref The control ref for the kernel control instance the client has
+ disconnected from.
+	@param unit The unit number of the kernel control instance the client has
+ disconnected from.
+	@param unitinfo The unitinfo value specified by the connect function
+ when the client connected.
+ */
+
+static errno_t ctl_disconnect(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitinfo) {
+    ww_printf("ctl_disconnect\n");
+    OSDecrementAtomic((SInt32*)&g_ctl_connections);
+    return 0;
+}
+
+/*!
+	@typedef ctl_getopt_func
+	@discussion The ctl_getopt_func is used to handle client get socket
+ option requests for the SYSPROTO_CONTROL option level. A buffer
+ is allocated for storage and passed to your function. The length
+ of that buffer is also passed. Upon return, you should set *len
+ to length of the buffer used. In some cases, data may be NULL.
+ When this happens, *len should be set to the length you would
+ have returned had data not been NULL. If the buffer is too small,
+ return an error.
+	@param ctl_ref The control ref of the kernel control.
+	@param unit The unit number of the kernel control instance.
+	@param unitinfo The unitinfo value specified by the connect function
+ when the client connected.
+	@param opt The socket option.
+	@param data A buffer to copy the results in to. May be NULL, see
+ discussion.
+	@param len A pointer to the length of the buffer. This should be set
+ to the length of the buffer used before returning.
+ */
+
+static int ctl_get(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitinfo, int opt,
+                   void *data, size_t *len)
+{
+    int		error = 0;
+    size_t  valsize;
+    void    *buf;
+    
+    ww_info("ctl_get - opt is %d\n", opt);
+    
+    switch (opt) {
+        case WORKWALL_ENABLED:
+            valsize = min(sizeof(g_enabled), *len);
+            buf = &g_enabled;
+            break;
+
+        default:
+            error = ENOTSUP;
+            break;
+    }
+    
+    if (error == 0) {
+        *len = valsize;
+        if (data != NULL)
+            bcopy(buf, data, valsize);
+    }
+    
+    return error;
+}
+
+/*!
+	@typedef ctl_setopt_func
+	@discussion The ctl_setopt_func is used to handle set socket option
+ calls for the SYSPROTO_CONTROL option level.
+	@param ctl_ref The control ref of the kernel control.
+	@param unit The unit number of the kernel control instance.
+	@param unitinfo The unitinfo value specified by the connect function
+ when the client connected.
+	@param opt The socket option.
+	@param data A pointer to the socket option data. The data has
+ already been copied in to the kernel for you.
+	@param len The length of the socket option data.
+ */
+
+static int ctl_set(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitinfo, int opt,
+                   void *data, size_t len)
+{
+    int error = 0;
+    int intval;
+    
+    ww_printf("ctl_set - opt is %d\n", opt);
+    
+    switch (opt)
+    {
+        case WORKWALL_ENABLED:
+            if (len < sizeof(int)) {
+                error = EINVAL;
+                break;
+            }
+            intval = *(int *)data;
+            lck_mtx_lock(g_mutex);
+            g_enabled = intval ? true : false;
+            lck_mtx_unlock(g_mutex);
+            break;
+        default:
+            error = ENOTSUP;
+            break;
+    }
+    
+    return error;
+}
+
+
+#pragma mark System Control Structure Definition
+
+// this is not a const structure since the ctl_id field will be set when the ctl_register call succeeds
+static struct kern_ctl_reg g_ctl_reg = {
+    BUNDLE_ID,				// use a reverse dns name which includes a name unique to your comany
+    0,						// set to 0 for dynamically assigned control ID - CTL_FLAG_REG_ID_UNIT not set
+    0,						// ctl_unit - ignored when CTL_FLAG_REG_ID_UNIT not set
+    0,                      // use CTL_FLAG_PRIVILEGED if want to require connecting user to be privleged
+    0,						// use default send size buffer
+    (8 * 1024),				// Override receive buffer size
+    ctl_connect,			// Called when a connection request is accepted
+    ctl_disconnect,			// called when a connection becomes disconnected
+    NULL,					// ctl_send_func - handles data sent from the client to kernel control
+    ctl_set,				// called when the user process makes the setsockopt call
+    ctl_get					// called when the user process makes the getsockopt call
+};
+
+
 #pragma mark kext entry functions
 
 extern kern_return_t workwall_start (kmod_info_t *ki, void *data) {
@@ -422,6 +570,17 @@ extern kern_return_t workwall_start (kmod_info_t *ki, void *data) {
     else
         goto bail;
     
+    // register our control structure so that we can be found by a user level process.
+    ret = ctl_register(&g_ctl_reg, &g_ctl_ref);
+    if (ret == 0) {
+        ww_debug("ctl_register id 0x%x, ref 0x%x \n", g_ctl_reg.ctl_id, g_ctl_ref);
+        g_kern_ctl_registered = TRUE;
+    }
+    else {
+        ww_info("ctl_register returned error %d\n", ret);
+        goto bail;
+    }
+    
     
     printf("workwall started\n");
     
@@ -436,6 +595,13 @@ bail:
     if (g_filter_registered_ip6) {
         sflt_unregister(WORKWALL_FLT_TCP_HANDLE_IP6);
         g_filter_registered_ip6 = FALSE;
+    }
+    
+    if (g_kern_ctl_registered == TRUE) {
+        ret = ctl_deregister(g_ctl_ref);
+        if (ret == 0) {
+            g_kern_ctl_registered = FALSE;
+        }
     }
 
     if (g_mutex) {
@@ -456,7 +622,20 @@ bail:
 
 extern kern_return_t workwall_stop (kmod_info_t *ki, void *data)
 {
+    int ret;
     struct TCPEntry *entry, *next_entry;
+
+    if (g_ctl_connections > 0) {
+        ww_info("still connected to a control socket - quit control process\n");
+        return EBUSY;
+    }
+    
+    if (g_kern_ctl_registered == TRUE) {
+        ret = ctl_deregister(g_ctl_ref);
+        if (ret == 0) {
+            g_kern_ctl_registered = FALSE;
+        }
+    }
     
     if (g_filter_registered_ip4 == TRUE && !g_filter_unregister_started_ip4) {
         sflt_unregister(WORKWALL_FLT_TCP_HANDLE_IP4);

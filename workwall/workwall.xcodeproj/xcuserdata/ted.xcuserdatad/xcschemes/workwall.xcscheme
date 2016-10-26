@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9F62BF7E1DC021E3004611CC"
-               BuildableName = "workwall.kext"
-               BlueprintName = "workwall"
+               BuildableName = "workwallnke.kext"
+               BlueprintName = "workwallnke"
                ReferencedContainer = "container:workwall.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,8 +46,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9F62BF7E1DC021E3004611CC"
-            BuildableName = "workwall.kext"
-            BlueprintName = "workwall"
+            BuildableName = "workwallnke.kext"
+            BlueprintName = "workwallnke"
             ReferencedContainer = "container:workwall.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -64,8 +64,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9F62BF7E1DC021E3004611CC"
-            BuildableName = "workwall.kext"
-            BlueprintName = "workwall"
+            BuildableName = "workwallnke.kext"
+            BlueprintName = "workwallnke"
             ReferencedContainer = "container:workwall.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
