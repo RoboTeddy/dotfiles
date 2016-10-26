@@ -54,6 +54,9 @@ static struct tcp_entry_list tcp_entries; // protected by g_mutex
 
 struct TCPInfo {
     uint32_t    state;             // connection state - TLS_CONNECT_OUT or TLS_CONNECT_IN
+    uint32_t    is_allowed_in;     // established during connection
+    uint32_t    is_allowed_out;    // established during connection
+    /*
     union {
         struct sockaddr_in	addr4; // ipv4 local addr
         struct sockaddr_in6	addr6; // ipv6 local addr
@@ -62,6 +65,7 @@ struct TCPInfo {
         struct sockaddr_in	addr4; // ipv4 remote addr
         struct sockaddr_in6	addr6; // ipv6 remote addr
     } remote;
+    */
     pid_t       pid;               // pid that created the socket
     char        pname[PNAME_MAX];  // name of process that create the socket
     pid_t       uid;               // user id that created the socket (unused)
@@ -84,17 +88,19 @@ typedef struct TCPEntry TCPEntry;
 #define kTCPEntryMagic 0xAABBCCDD;
 
 // macros to access TCPInfo fields in the TCPEntry structure
-#define te_state     info.state
-#define te_len       info.len
-#define te_pid       info.pid
-#define te_pname     info.pname
-#define te_uid       info.uid
-#define te_protocol  info.protocol
+#define te_state            info.state
+#define te_is_allowed_in    info.is_allowed_in
+#define te_is_allowed_out   info.is_allowed_in
+#define te_len              info.len
+#define te_pid              info.pid
+#define te_pname            info.pname
+#define te_uid              info.uid
+#define te_protocol         info.protocol
 
-#define te_local4    info.local.addr4
-#define te_remote4   info.remote.addr4
-#define te_local6    info.local.addr6
-#define te_remote6   info.remote.addr6
+#define te_local4           info.local.addr4
+#define te_remote4          info.remote.addr4
+#define te_local6           info.local.addr6
+#define te_remote6          info.remote.addr6
 
 #pragma mark  Utility functions
 
@@ -148,6 +154,8 @@ static boolean_t is_allowed(struct TCPEntry *entry, const struct sockaddr *from)
 // this kind of thing should come over ctl socket from userland,
 // and should be built into a radix tree. or something.
 static boolean_t is_pname_allowed(char *name) {
+    if (strcmp(name, "ntpd") == 0) return true;
+    if (strcmp(name, "geth") == 0) return true;
     if (strcmp(name, "Spotify") == 0) return true;
     if (strcmp(name, "Things") == 0) return true;
     if (strcmp(name, "ruby") == 0) return true; // for screenshot uploading
@@ -155,18 +163,16 @@ static boolean_t is_pname_allowed(char *name) {
     return false;
 }
 
-// if TCP connection is already established, `from` will be NULL
-static boolean_t can_in(struct TCPEntry *entry, const struct sockaddr *from) {
+static boolean_t can_connect_in(struct TCPEntry *entry, const struct sockaddr *from) {
     if (is_pname_allowed(entry->te_pname)) {
+        ww_debug("allowing in due to pname (%s)\n", entry->te_pname);
         return true;
     }
 
     if (entry->te_protocol == AF_INET) {
         // ip4
         ww_debug("blocking ip4 (%s) from: ", entry->te_pname);
-        if (from) {
-            log_ip_and_port_addr((struct sockaddr_in*)from);
-        }
+        log_ip_and_port_addr((struct sockaddr_in*)from);
     }
     else {
         // ip6
@@ -175,19 +181,16 @@ static boolean_t can_in(struct TCPEntry *entry, const struct sockaddr *from) {
     return false;
 }
 
-// if TCP connection is already established, `to` will be NULL
-static boolean_t can_out(struct TCPEntry *entry, const struct sockaddr *to) {
+static boolean_t can_connect_out(struct TCPEntry *entry, const struct sockaddr *to) {
     if (is_pname_allowed(entry->te_pname)) {
+        ww_debug("allowing out due to pname (%s)\n", entry->te_pname);
         return true;
     }
     
     if (entry->te_protocol == AF_INET) {
         // ip4
         ww_debug("blocking ip4 (%s) to: ", entry->te_pname);
-        
-        if (to) {
-            log_ip_and_port_addr((struct sockaddr_in*)to);
-        }
+        log_ip_and_port_addr((struct sockaddr_in*)to);
     }
     else {
         // ip6
@@ -370,7 +373,7 @@ static errno_t ww_data_in(void *cookie, socket_t so, const struct sockaddr *from
         ww_info("ERROR - to field not NULL!");
     }
     
-    if (!g_enabled || can_in(entry, NULL)) {
+    if (!g_enabled || entry->te_is_allowed_in) {
         return 0; // allow
     }
     else {
@@ -419,7 +422,7 @@ static errno_t ww_data_out(void *cookie, socket_t so, const struct sockaddr *to,
         ww_info("ERROR - to field not NULL!");
     }
     
-    if (!g_enabled || can_out(entry, NULL)) {
+    if (!g_enabled || entry->te_is_allowed_out) {
         return 0; // allow
     }
     else {
@@ -451,9 +454,10 @@ static errno_t ww_connect_in(void *cookie, socket_t so, const struct sockaddr *f
     struct TCPEntry *entry = TCPEntryFromCookie(cookie);
     
     assert((from->sa_family == AF_INET) || (from->sa_family == AF_INET6));
+    OSBitOrAtomic(can_connect_in(entry, from), (UInt32*)&(entry->te_is_allowed_in));
     //OSBitOrAtomic(TCPINFO_CONNECT_IN, (UInt32*)&(entry->state)); // not used
     
-    if(!g_enabled || can_in(entry, from)) {
+    if(!g_enabled || entry->te_is_allowed_in) {
         return 0; // allow
     }
     else {
@@ -482,9 +486,10 @@ static errno_t ww_connect_out(void *cookie, socket_t so, const struct sockaddr *
     struct TCPEntry *entry = TCPEntryFromCookie(cookie);
     
     assert((from->sa_family == AF_INET) || (from->sa_family == AF_INET6));
+    OSBitOrAtomic(can_connect_out(entry, to), (UInt32*)&(entry->te_is_allowed_out));
     //OSBitOrAtomic(TCPINFO_CONNECT_IN, (UInt32*)&(entry->state)); // not used
     
-    if(!g_enabled || can_out(entry, to)) {
+    if(!g_enabled || entry->te_is_allowed_out) {
         return 0; // allow
     }
     else {
