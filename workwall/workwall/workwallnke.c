@@ -1,6 +1,9 @@
 // https://github.com/gdbinit/tcplognke/blob/master/tcplognke.c
 // (useful as implementation guide)
 
+// todo: look at saner start/stop logic here:
+// https://developer.apple.com/library/content/samplecode/enetlognke/Listings/enetlognke_c.html#//apple_ref/doc/uid/DTS10003579-enetlognke_c-DontLinkElementID_4
+
 #include <mach/mach_types.h>
 #include <mach/vm_types.h>
 #include <mach/kmod.h>
@@ -134,14 +137,6 @@ static struct TCPEntry * TCPEntryFromCookie(void *cookie) {
     return result;
 }
 
-// is this for ip4 only? check.
-static void log_ip_and_port_addr(struct sockaddr_in* addr)
-{
-    unsigned char addstr[256];
-    inet_ntop(AF_INET, &addr->sin_addr, (char*)addstr, sizeof(addstr));
-    printf("%s:%d\n", addstr, ntohs(addr->sin_port));
-}
-
 #pragma mark Connection Permissions
 
 // this kind of thing should come over ctl socket from userland,
@@ -156,6 +151,34 @@ static boolean_t is_pname_allowed(char *name) {
     return false;
 }
 
+
+// Useful tool for editing this fn http://www.silisoftware.com/tools/ipconverter.php
+static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
+    uint32_t intip = htonl(addr->sin_addr.s_addr);
+    
+    if(intip == 2130706433) return TRUE; // 127.0.0.1
+    
+    // dig workflowy.com
+    if(intip == 876040851) return TRUE; // 52.55.82.147
+    if(intip == 885986970) return TRUE; // 52.207.22.154
+    if(intip == 873784021) return TRUE; // 52.20.226.213
+    if(intip == 915946831) return TRUE; // 54.152.61.79
+    
+    // for workflowy: dig fonts.googleapis.com (and dig subsequent CNAME multiple times)
+    if(intip == 3627729738) return TRUE; // 216.58.195.74
+    if(intip == 2899903850) return TRUE; // 172.217.5.106
+    if(intip == 3627729578) return TRUE; // 216.58.194.170
+    if(intip == 3627728906) return TRUE; // 216.58.192.10
+    
+    /*
+    unsigned char addstr[256];
+    inet_ntop(AF_INET, &addr->sin_addr, (char*)addstr, sizeof(addstr));
+    printf("%s:%d\n", addstr, ntohs(addr->sin_port));
+    */
+
+    return FALSE;
+}
+
 static boolean_t can_connect_in(struct TCPEntry *entry, const struct sockaddr *from) {
     if (is_pname_allowed(entry->te_pname)) {
         ww_debug("allowed in due to pname (%s)\n", entry->te_pname);
@@ -164,8 +187,7 @@ static boolean_t can_connect_in(struct TCPEntry *entry, const struct sockaddr *f
 
     if (entry->te_protocol == AF_INET) {
         // ip4
-        ww_debug("disallowed in ip4 (%s) from: ", entry->te_pname);
-        log_ip_and_port_addr((struct sockaddr_in*)from);
+        return is_addr_allowed_ip4((struct sockaddr_in*)from);
     }
     else {
         // ip6
@@ -182,8 +204,8 @@ static boolean_t can_connect_out(struct TCPEntry *entry, const struct sockaddr *
     
     if (entry->te_protocol == AF_INET) {
         // ip4
-        ww_debug("disallowed out ip4 (%s) to: ", entry->te_pname);
-        log_ip_and_port_addr((struct sockaddr_in*)to);
+        //ww_debug("disallowed out ip4 (%s) to: ", entry->te_pname);
+        return is_addr_allowed_ip4((struct sockaddr_in*)to);
     }
     else {
         // ip6
