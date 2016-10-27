@@ -38,7 +38,6 @@ install_symlink () {
     fi
 }
 
-
 ### Homebrew (runs before symlinks are installed, since .bash_profile depends on brew & things in Brewfile)
 
 if ! type "brew" > /dev/null
@@ -114,7 +113,7 @@ if csrutil status | grep 'disabled' > /dev/null; then
     fi
 
     info "Loading workwall kext"
-    sudo kextload "/Library/Extensions/workwallnke.kext"
+    sudo kextload -b local.roboteddy.workwall
 else
     info "***************************************************************************"
     info "workwall's kernel extension requires system integrity protection to be off"
@@ -122,6 +121,8 @@ else
     info "once in recovery mode, open a terminal and run `csrutil disable`"
     info "***************************************************************************"
 fi
+
+sudo cp "$DOTFILES_ROOT/workwall/local.roboteddy.workwall.plist" "/Library/LaunchDaemons/local.roboteddy.workwall.plist"
 
 ### Cron
 

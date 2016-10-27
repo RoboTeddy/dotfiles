@@ -134,7 +134,7 @@ int main(int argc, char * const *argv) {
             perror("getsockopt WORKWALL_ENABLED");
             exit(0);
         }
-        printf("enabled: %d\n", enabled);
+        printf("workwall enabled: %d\n", enabled);
     }
     
     
