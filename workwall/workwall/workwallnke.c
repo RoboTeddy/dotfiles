@@ -154,21 +154,25 @@ static boolean_t is_pname_allowed(char *name) {
 
 // Useful tool for editing this fn http://www.silisoftware.com/tools/ipconverter.php
 static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
+    // reverse order of usual, but matches tool
     uint32_t intip = htonl(addr->sin_addr.s_addr);
+    uint16_t port = ntohs(addr->sin_port);
     
-    if(intip == 2130706433) return TRUE; // 127.0.0.1
+    if (port == 22) return TRUE; // allow ssh
+    
+    if (intip == 2130706433) return TRUE; // 127.0.0.1
     
     // dig workflowy.com
-    if(intip == 876040851) return TRUE; // 52.55.82.147
-    if(intip == 885986970) return TRUE; // 52.207.22.154
-    if(intip == 873784021) return TRUE; // 52.20.226.213
-    if(intip == 915946831) return TRUE; // 54.152.61.79
+    if (intip == 876040851) return TRUE; // 52.55.82.147
+    if (intip == 885986970) return TRUE; // 52.207.22.154
+    if (intip == 873784021) return TRUE; // 52.20.226.213
+    if (intip == 915946831) return TRUE; // 54.152.61.79
     
     // for workflowy: dig fonts.googleapis.com (and dig subsequent CNAME multiple times)
-    if(intip == 3627729738) return TRUE; // 216.58.195.74
-    if(intip == 2899903850) return TRUE; // 172.217.5.106
-    if(intip == 3627729578) return TRUE; // 216.58.194.170
-    if(intip == 3627728906) return TRUE; // 216.58.192.10
+    if (intip == 3627729738) return TRUE; // 216.58.195.74
+    if (intip == 2899903850) return TRUE; // 172.217.5.106
+    if (intip == 3627729578) return TRUE; // 216.58.194.170
+    if (intip == 3627728906) return TRUE; // 216.58.192.10
     
     /*
     unsigned char addstr[256];
