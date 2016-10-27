@@ -94,6 +94,35 @@ $kara set repeat.wait 33
 $kara set local.vijk 1
 
 
+### Install workwall
+
+# Need to copy, since kext must be owned by root
+info 'Installing workwall'
+sudo cp -R "$DOTFILES_ROOT/workwall/build/workwallnke.kext" "/Library/Extensions"
+
+if csrutil status | grep 'disabled' > /dev/null; then
+    info "System integrity protection is disabled"
+
+    if kextstat | grep "local.roboteddy.workwall" > /dev/null; then
+        info "Unloading workwall kext..."
+        sudo kextunload -b local.roboteddy.workwall
+    fi
+    if kextstat | grep "local.roboteddy.workwall" > /dev/null; then
+        sleep 0.5
+        info "Unloading workwall kext... (2nd attempt)"
+        sudo kextunload -b local.roboteddy.workwall
+    fi
+
+    info "Loading workwall kext"
+    sudo kextload "/Library/Extensions/workwallnke.kext"
+else
+    info "***************************************************************************"
+    info "workwall's kernel extension requires system integrity protection to be off"
+    info "reboot into recovery mode with CMD R during startup"
+    info "once in recovery mode, open a terminal and run `csrutil disable`"
+    info "***************************************************************************"
+fi
+
 ### Cron
 
 info "Setting up periodic tasks"
@@ -109,10 +138,9 @@ done
 # internet-on and internet-off sudo /sbin/pfctl to modify the firewall
 # task can't prompt for password, so let's modify sudoers.
 # careful here! screwing up sudoers file is bad.
-LINE="%admin ALL = NOPASSWD: /sbin/pfctl"
-FILE=/etc/sudoers
-sudo grep -q "$LINE" "$FILE" || sudo echo "$LINE" >> "$FILE"
-
+# LINE="%admin ALL = NOPASSWD: /sbin/pfctl"
+# FILE=/etc/sudoers
+# sudo grep -q "$LINE" "$FILE" || sudo echo "$LINE" >> "$FILE"
 
 ### macOS Settings
 

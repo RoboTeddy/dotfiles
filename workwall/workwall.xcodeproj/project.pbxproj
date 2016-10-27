@@ -10,7 +10,7 @@
 		9F62BF831DC021E3004611CC /* workwallnke.c in Sources */ = {isa = PBXBuildFile; fileRef = 9F62BF821DC021E3004611CC /* workwallnke.c */; };
 		9F62BF8B1DC02F9C004611CC /* workwallnke.kext in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9F62BF7F1DC021E3004611CC /* workwallnke.kext */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9FC2920B1DC1724000032528 /* workwallctl in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9FC291FE1DC1675F00032528 /* workwallctl */; };
-		9FC2920D1DC1729100032528 /* workwallctl.c in Sources */ = {isa = PBXBuildFile; fileRef = 9FC2920C1DC1729100032528 /* workwallctl.c */; };
+		9FC2920E1DC174D100032528 /* workwallctl.c in Sources */ = {isa = PBXBuildFile; fileRef = 9FC2920C1DC1729100032528 /* workwallctl.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,7 +27,7 @@
 		9FC292091DC1722B00032528 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "${PROJECT_DIR}/build";
+			dstPath = "${PROJECT_DIR}/../bin";
 			dstSubfolderSpec = 0;
 			files = (
 				9FC2920B1DC1724000032528 /* workwallctl in CopyFiles */,
@@ -202,7 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9FC2920D1DC1729100032528 /* workwallctl.c in Sources */,
+				9FC2920E1DC174D100032528 /* workwallctl.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

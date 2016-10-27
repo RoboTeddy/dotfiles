@@ -105,8 +105,8 @@ int main(int argc, char * const *argv) {
     if (ioctl(g_socket, CTLIOCGINFO, &ctl_info) == -1) {
         perror("ioctl CTLIOCGINFO");
         exit(0);
-    } else
-        printf("ctl_id: 0x%x for ctl_name: %s\n", ctl_info.ctl_id, ctl_info.ctl_name);
+    }/* else
+        printf("ctl_id: 0x%x for ctl_name: %s\n", ctl_info.ctl_id, ctl_info.ctl_name);*/
     
     bzero(&sc, sizeof(struct sockaddr_ctl));
     sc.sc_len = sizeof(struct sockaddr_ctl);
