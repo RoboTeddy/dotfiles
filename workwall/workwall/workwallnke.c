@@ -466,7 +466,7 @@ static errno_t ww_connect_in(void *cookie, socket_t so, const struct sockaddr *f
 }
 
 
-/*!
+/*
  @typedef sf_connect_out_func
  
  @discussion sf_connect_out_func is called to filter outbound
@@ -557,30 +557,29 @@ static errno_t ctl_connect(kern_ctl_ref ctl_ref, struct sockaddr_ctl *sac, void 
 }
 
 
-/*!
-	@typedef ctl_disconnect_func
-	@discussion The ctl_disconnect_func is used to receive notification
+/*
+ @typedef ctl_disconnect_func
+ @discussion The ctl_disconnect_func is used to receive notification
  that a client has disconnected from the kernel control. This
  usually happens when the socket is closed. If this is the last
  socket attached to your kernel control, you may unregister your
  kernel control from this callback.
-	@param ctl_ref The control ref for the kernel control instance the client has
+ @param ctl_ref The control ref for the kernel control instance the client has
  disconnected from.
-	@param unit The unit number of the kernel control instance the client has
+ @param unit The unit number of the kernel control instance the client has
  disconnected from.
-	@param unitinfo The unitinfo value specified by the connect function
+ @param unitinfo The unitinfo value specified by the connect function
  when the client connected.
  */
-
 static errno_t ctl_disconnect(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitinfo) {
     ww_info("ctl_disconnect\n");
     OSDecrementAtomic((SInt32*)&g_ctl_connections);
     return 0;
 }
 
-/*!
-	@typedef ctl_getopt_func
-	@discussion The ctl_getopt_func is used to handle client get socket
+/*
+ @typedef ctl_getopt_func
+ @discussion The ctl_getopt_func is used to handle client get socket
  option requests for the SYSPROTO_CONTROL option level. A buffer
  is allocated for storage and passed to your function. The length
  of that buffer is also passed. Upon return, you should set *len
@@ -588,17 +587,16 @@ static errno_t ctl_disconnect(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitin
  When this happens, *len should be set to the length you would
  have returned had data not been NULL. If the buffer is too small,
  return an error.
-	@param ctl_ref The control ref of the kernel control.
-	@param unit The unit number of the kernel control instance.
-	@param unitinfo The unitinfo value specified by the connect function
+ @param ctl_ref The control ref of the kernel control.
+ @param unit The unit number of the kernel control instance.
+ @param unitinfo The unitinfo value specified by the connect function
  when the client connected.
-	@param opt The socket option.
-	@param data A buffer to copy the results in to. May be NULL, see
+ @param opt The socket option.
+ @param data A buffer to copy the results in to. May be NULL, see
  discussion.
-	@param len A pointer to the length of the buffer. This should be set
+ @param len A pointer to the length of the buffer. This should be set
  to the length of the buffer used before returning.
  */
-
 static int ctl_get(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitinfo, int opt,
                    void *data, size_t *len)
 {
@@ -628,20 +626,19 @@ static int ctl_get(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitinfo, int opt
     return error;
 }
 
-/*!
-	@typedef ctl_setopt_func
-	@discussion The ctl_setopt_func is used to handle set socket option
+/*
+ @typedef ctl_setopt_func
+ @discussion The ctl_setopt_func is used to handle set socket option
  calls for the SYSPROTO_CONTROL option level.
-	@param ctl_ref The control ref of the kernel control.
-	@param unit The unit number of the kernel control instance.
-	@param unitinfo The unitinfo value specified by the connect function
+ @param ctl_ref The control ref of the kernel control.
+ @param unit The unit number of the kernel control instance.
+ @param unitinfo The unitinfo value specified by the connect function
  when the client connected.
-	@param opt The socket option.
-	@param data A pointer to the socket option data. The data has
+ @param opt The socket option.
+ @param data A pointer to the socket option data. The data has
  already been copied in to the kernel for you.
-	@param len The length of the socket option data.
+ @param len The length of the socket option data.
  */
-
 static int ctl_set(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitinfo, int opt,
                    void *data, size_t len)
 {
