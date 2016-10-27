@@ -672,17 +672,17 @@ static int ctl_set(kern_ctl_ref ctl_ref, u_int32_t unit, void *unitinfo, int opt
 
 // this is not a const structure since the ctl_id field will be set when the ctl_register call succeeds
 static struct kern_ctl_reg g_ctl_reg = {
-    BUNDLE_ID,				// use a reverse dns name which includes a name unique to your comany
-    0,						// set to 0 for dynamically assigned control ID - CTL_FLAG_REG_ID_UNIT not set
-    0,						// ctl_unit - ignored when CTL_FLAG_REG_ID_UNIT not set
-    0,                      // use CTL_FLAG_PRIVILEGED if want to require connecting user to be privleged
-    0,						// use default send size buffer
-    (8 * 1024),				// Override receive buffer size
-    ctl_connect,			// Called when a connection request is accepted
-    ctl_disconnect,			// called when a connection becomes disconnected
-    NULL,					// ctl_send_func - handles data sent from the client to kernel control
-    ctl_set,				// called when the user process makes the setsockopt call
-    ctl_get					// called when the user process makes the getsockopt call
+    BUNDLE_ID,          // use a reverse dns name which includes a name unique to your comany
+    0,                  // set to 0 for dynamically assigned control ID - CTL_FLAG_REG_ID_UNIT not set
+    0,                  // ctl_unit - ignored when CTL_FLAG_REG_ID_UNIT not set
+    0,                  // use CTL_FLAG_PRIVILEGED if want to require connecting user to be privleged
+    0,                  // use default send size buffer
+    (8 * 1024),         // Override receive buffer size
+    ctl_connect,        // Called when a connection request is accepted
+    ctl_disconnect,     // called when a connection becomes disconnected
+    NULL,               // ctl_send_func - handles data sent from the client to kernel control
+    ctl_set,            // called when the user process makes the setsockopt call
+    ctl_get             // called when the user process makes the getsockopt call
 };
 
 
