@@ -1,0 +1,37 @@
+#!/bin/sh
+
+cd "$(dirname "$0")" # cd to directory this file is in
+WORKWALL_ROOT="$(pwd -P)"
+
+# Need to copy, since kext must be owned by root
+sudo cp -R "$WORKWALL_ROOT/build/workwallnke.kext" "/Library/Extensions"
+
+if csrutil status | grep 'disabled' > /dev/null; then
+
+    echo "Checking to see if kext is already loaded..."
+    kextstat | grep "local.roboteddy.workwall" > /dev/null;
+    if [ $? -eq 0 ]; then
+        while [ $? -eq 0 ]; do
+            echo "Attempting to unload workwall kext..."
+            sudo kextunload -b local.roboteddy.workwall
+            echo "Checking to see if kext is still loaded..."
+            kextstat | grep "local.roboteddy.workwall" > /dev/null;
+        done
+        echo "*** Workwall kext unloaded successfully"
+    else
+        echo "Workwall kext not loaded"
+    fi
+
+    echo "Loading workwall kext"
+    sudo kextload -b local.roboteddy.workwall
+else
+    echo "*********************************************************************"
+    echo "* workwall's kernel extension isn't signed, so to be installed, you *"
+    echo "* must disable system integrity protection.                         *"
+    echo "* reboot into recovery mode with cmd+r during startup               *"
+    echo "* once in recovery mode, open a terminal and run `csrutil disable`  *"
+    echo "*********************************************************************"
+fi
+
+# Need to copy, since must be owned by root
+sudo cp "$WORKWALL_ROOT/local.roboteddy.workwall.plist" "/Library/LaunchDaemons/"
