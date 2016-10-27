@@ -144,13 +144,6 @@ static void log_ip_and_port_addr(struct sockaddr_in* addr)
 
 #pragma mark Connection Permissions
 
-/*
-static boolean_t is_allowed(struct TCPEntry *entry, const struct sockaddr *from) {
-    ww_debug("allowing incoming connection\n");
-    return true;
-}
-*/
-
 // this kind of thing should come over ctl socket from userland,
 // and should be built into a radix tree. or something.
 static boolean_t is_pname_allowed(char *name) {
@@ -413,7 +406,6 @@ static errno_t ww_data_in(void *cookie, socket_t so, const struct sockaddr *from
  the contents of the "to" field to local memory when swallowing the packet so that
  you have a valid sockaddr to pass in the inject call.
  */
-
 static errno_t ww_data_out(void *cookie, socket_t so, const struct sockaddr *to,
                            mbuf_t *data, mbuf_t *control, sflt_data_flag_t flags) {
     struct TCPEntry	*entry = (struct TCPEntry *) cookie;
@@ -448,7 +440,6 @@ static errno_t ww_data_out(void *cookie, socket_t so, const struct sockaddr *to,
  0 - The caller will continue with normal processing of the connection.
  Anything Else - The caller will rejecting the incoming connection.
  */
-
 static errno_t ww_connect_in(void *cookie, socket_t so, const struct sockaddr *from)
 {
     struct TCPEntry *entry = TCPEntryFromCookie(cookie);
