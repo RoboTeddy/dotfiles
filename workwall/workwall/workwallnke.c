@@ -159,6 +159,8 @@ static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
     uint32_t intip = htonl(addr->sin_addr.s_addr);
     uint16_t port = ntohs(addr->sin_port);
     
+    ww_debug("checking to see if allowed: intip %u, port %u\n", intip, port);
+    
     if (port == 22) return TRUE; // allow ssh
     
     if (intip == 2130706433) return TRUE; // 127.0.0.1
@@ -190,6 +192,7 @@ static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
 }
 
 static boolean_t can_connect_in(struct TCPEntry *entry, const struct sockaddr *from) {
+    ww_debug("the process '%s' is trying to connect in\n", entry->te_pname);
     if (is_pname_allowed(entry->te_pname)) {
         ww_debug("allowed in due to pname (%s)\n", entry->te_pname);
         return true;
@@ -207,6 +210,7 @@ static boolean_t can_connect_in(struct TCPEntry *entry, const struct sockaddr *f
 }
 
 static boolean_t can_connect_out(struct TCPEntry *entry, const struct sockaddr *to) {
+    ww_debug("the process '%s' is trying to connect out\n", entry->te_pname);
     if (is_pname_allowed(entry->te_pname)) {
         ww_debug("allowed out due to pname (%s)\n", entry->te_pname);
         return true;
@@ -395,14 +399,14 @@ static errno_t ww_data_in(void *cookie, socket_t so, const struct sockaddr *from
     struct TCPEntry	*entry = (struct TCPEntry *) cookie;
     
     if (from) { // see note above
-        ww_info("ERROR - to field not NULL!");
+        ww_info("ERROR - to field not NULL!\n");
     }
     
     if (!g_enabled || entry->te_is_allowed_in) {
         return 0; // allow
     }
     else {
-        ww_debug("Blocking a data packet for %s", entry->te_pname);
+        ww_debug("Blocking a data packet in for '%s' (flags: %d)\n", entry->te_pname, flags);
         return 1; //block
     }
 }
@@ -450,7 +454,7 @@ static errno_t ww_data_out(void *cookie, socket_t so, const struct sockaddr *to,
         return 0; // allow
     }
     else {
-        ww_debug("Blocking a data packet for %s", entry->te_pname);
+        ww_debug("Blocking a data packet out for '%s' (flags: %d)", entry->te_pname, flags);
         return 1; //block
     }
 }
@@ -478,12 +482,13 @@ static errno_t ww_connect_in(void *cookie, socket_t so, const struct sockaddr *f
     
     assert((from->sa_family == AF_INET) || (from->sa_family == AF_INET6));
     OSBitOrAtomic(can_connect_in(entry, from), (UInt32*)&(entry->te_is_allowed_in));
-    //OSBitOrAtomic(TCPINFO_CONNECT_IN, (UInt32*)&(entry->state)); // not used
+    OSBitOrAtomic(TCPINFO_CONNECT_IN, (UInt32*)&(entry->te_state));
     
     if(!g_enabled || entry->te_is_allowed_in) {
         return 0; // allow
     }
     else {
+        ww_debug("Blocking connection in: '%s'\n", entry->te_pname);
         return EPERM; // block
     }
 }
@@ -510,13 +515,74 @@ static errno_t ww_connect_out(void *cookie, socket_t so, const struct sockaddr *
     
     assert((from->sa_family == AF_INET) || (from->sa_family == AF_INET6));
     OSBitOrAtomic(can_connect_out(entry, to), (UInt32*)&(entry->te_is_allowed_out));
-    //OSBitOrAtomic(TCPINFO_CONNECT_IN, (UInt32*)&(entry->state)); // not used
+    OSBitOrAtomic(TCPINFO_CONNECT_OUT, (UInt32*)&(entry->te_state));
     
     if(!g_enabled || entry->te_is_allowed_out) {
         return 0; // allow
     }
     else {
+        ww_debug("Blocking connection out: '%s'\n", entry->te_pname);
         return EPERM; // block
+    }
+}
+
+/*
+ @typedef sf_notify_func
+	
+ @discussion sf_notify_func is called to notify the filter of various
+ state changes and other events occuring on the socket.
+ @param cookie Cookie value specified when the filter attach was
+ called.
+ @param so The socket the filter is attached to.
+ @param event The type of event that has occurred.
+ @param param Additional information about the event.
+ */
+static void ww_notify(void *cookie, socket_t so, sflt_event_t event, void *param)
+{
+    struct TCPEntry *entry = TCPEntryFromCookie(cookie);
+    
+    if(event == sock_evt_connected) {
+        //ww_debug("sock_evt_connected (%s) so: 0x%X, \n", entry->te_pname, so);
+        
+        if ((entry->te_state) == 0) {
+            // seems to happen for connections to things listening locally. or something. there's no ww_connect_out first; just a notification here.
+            // XXX: could check actual addresses using getsockname (see commented code), to abide by our to/from rules...
+            ww_info("socket connected while in unknown state; whitelisting it (%s) \n", entry->te_pname);
+            OSBitOrAtomic(1, (UInt32*)&(entry->te_is_allowed_in));
+            OSBitOrAtomic(1, (UInt32*)&(entry->te_is_allowed_out));
+            /*
+            unsigned char	addrString[256];
+            void			*srcAddr;
+            in_port_t		port;
+            
+            if (tlp->tle_protocol == AF_INET)
+            {
+               // check to see if we have obtained the local socket address
+               if (tlp->tle_local4.sin_len == 0)
+               {
+                   sock_getsockname(so, (struct sockaddr*)&(tlp->tle_local4), sizeof(tlp->tle_local4));
+                   tlp->tle_local4.sin_port = ntohs( tlp->tle_local4.sin_port);
+               }
+               // if an error occurs, well we tried, but it's nothing to cause us to stop.
+               port = tlp->tle_local4.sin_port;
+               srcAddr = &(tlp->tle_local4.sin_addr);
+            }
+            else	// then it's an AF_INET6 connection
+            {
+               // check to see if we have obtained the local socket address
+               if (tlp->tle_local6.sin6_len == 0)
+               {
+                   sock_getsockname(so, (struct sockaddr*)&(tlp->tle_local6), sizeof(tlp->tle_local6));
+                   tlp->tle_local6.sin6_port = ntohs( tlp->tle_local6.sin6_port);
+               }
+               // if an error occurs, well we tried, but it's nothing to cause us to stop.
+               port = tlp->tle_local6.sin6_port;
+               srcAddr = &(tlp->tle_local6.sin6_addr);
+            }
+            inet_ntop(tlp->tle_protocol, srcAddr, (char*)addrString, sizeof(addrString));
+            ww_info("Local Addr: %s:%d\n", addrString, port);
+            */
+        }
     }
 }
 
@@ -534,7 +600,7 @@ static struct sflt_filter socket_tcp_filter_ip4 = {
     ww_unregistered_ip4,
     ww_attach_ip4,
     ww_detach,
-    NULL,
+    ww_notify,
     NULL,
     NULL,
     ww_data_in,
@@ -555,7 +621,7 @@ static struct sflt_filter socket_tcp_filter_ip6 = {
     ww_unregistered_ip6,
     ww_attach_ip6,
     ww_detach,
-    NULL,
+    ww_notify,
     NULL,
     NULL,
     ww_data_in,
@@ -714,6 +780,8 @@ static struct kern_ctl_reg g_ctl_reg = {
 extern kern_return_t workwall_start (kmod_info_t *ki, void *data) {
     
     int ret;
+    
+    ww_debug("debug messages are visible\n");
     
     TAILQ_INIT(&tcp_entries);
     
