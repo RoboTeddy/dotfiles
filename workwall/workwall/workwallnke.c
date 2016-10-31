@@ -144,6 +144,7 @@ static struct TCPEntry * TCPEntryFromCookie(void *cookie) {
 static boolean_t is_pname_allowed(char *name) {
     if (strcmp(name, "ntpd") == 0) return true;
     if (strcmp(name, "geth") == 0) return true;
+    if (strcmp(name, "VirtualBoxVM") == 0) return true;
     if (strcmp(name, "Spotify") == 0) return true;
     if (strcmp(name, "Things") == 0) return true;
     if (strcmp(name, "ruby") == 0) return true; // for screenshot uploading
@@ -154,13 +155,18 @@ static boolean_t is_pname_allowed(char *name) {
 
 // Useful tool for editing this fn http://www.silisoftware.com/tools/ipconverter.php
 static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
-    // reverse order of usual, but matches tool
+    // reverse byte order of usual, but matches above tool
     uint32_t intip = htonl(addr->sin_addr.s_addr);
     uint16_t port = ntohs(addr->sin_port);
     
     if (port == 22) return TRUE; // allow ssh
     
     if (intip == 2130706433) return TRUE; // 127.0.0.1
+    
+    // local networks
+    if(intip >= 167772160 && intip <= 184549375) return TRUE; // 10.0.0.0 to 10.255.255.255
+    if(intip >= 2886729728 && intip <= 2887778303) return TRUE; // 172.16.0.0 to 172.31.255.255
+    if(intip >= 3232235520 && intip <= 3232301055) return TRUE; // 192.168.0.0 to 192.168.255.255
     
     // dig workflowy.com
     if (intip == 876040851) return TRUE; // 52.55.82.147

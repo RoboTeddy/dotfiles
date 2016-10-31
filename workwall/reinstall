@@ -24,6 +24,7 @@ if csrutil status | grep 'disabled' > /dev/null; then
 
     echo "Loading workwall kext"
     sudo kextload -b local.roboteddy.workwall
+    echo "tcp connections that were created prior to now will all be allowed until you restart"
 else
     echo "*********************************************************************"
     echo "* workwall's kernel extension isn't signed, so to be installed, you *"
