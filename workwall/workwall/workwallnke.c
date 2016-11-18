@@ -149,6 +149,7 @@ static boolean_t is_pname_allowed(char *name) {
     if (strcmp(name, "Things") == 0) return true;
     if (strcmp(name, "ruby") == 0) return true; // for screenshot uploading
     if (strcmp(name, "bztransmit") == 0) return true; // backblaze backups
+    if (strcmp(name, "npm") == 0) return true;
     return false;
 }
 
@@ -181,6 +182,18 @@ static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
     if (intip == 2899903850) return TRUE; // 172.217.5.106
     if (intip == 3627729578) return TRUE; // 216.58.194.170
     if (intip == 3627728906) return TRUE; // 216.58.192.10
+    
+    // dig hackpad.com
+    if (intip == 872753936) return TRUE; // 52.5.43.16
+    
+    // dig silisoftware.com (for ip converter tool -- useful if not connected)
+    if (intip == 1255173926) return TRUE; // 74.208.111.38
+    
+    // dig getpocket.com
+    if (intip == 872924386) return TRUE; // 52.7.196.226
+    if (intip == 885613722) return TRUE; // 52.201.100.154
+    if (intip == 875401757) return TRUE; // 52.45.146.29
+    if (intip == 921454049) return TRUE; // 54.236.69.225
     
     /*
     unsigned char addstr[256];
@@ -780,7 +793,7 @@ static struct kern_ctl_reg g_ctl_reg = {
 extern kern_return_t workwall_start (kmod_info_t *ki, void *data) {
     
     int ret;
-    
+    ww_info("starting...\n");
     ww_debug("debug messages are visible\n");
     
     TAILQ_INIT(&tcp_entries);
