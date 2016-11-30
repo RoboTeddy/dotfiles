@@ -150,11 +150,12 @@ static boolean_t is_pname_allowed(char *name) {
     if (strcmp(name, "ruby") == 0) return true; // for screenshot uploading
     if (strcmp(name, "bztransmit") == 0) return true; // backblaze backups
     if (strcmp(name, "npm") == 0) return true;
+    if (strcmp(name, "WhatsApp") == 0) return true;
     return false;
 }
 
 
-// Useful tool for editing this fn http://www.silisoftware.com/tools/ipconverter.php
+// Useful tool for editing this fn http://www.silisoftware.com/tools/ipconverter.php?convert_from=127.0.0.1
 static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
     // reverse byte order of usual, but matches above tool
     uint32_t intip = htonl(addr->sin_addr.s_addr);
@@ -195,6 +196,11 @@ static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
     if (intip == 875401757) return TRUE; // 52.45.146.29
     if (intip == 921454049) return TRUE; // 54.236.69.225
     
+    // dig trello.com
+    // trello seems to have many ips (due to akami dns setup), so I'm hardcoding
+    // it to the ip below in /etc/hosts. I'm sure this will never cause any problems
+    // for me later. =[
+    if (intip == 388358708) return TRUE; // 23.37.226.52
     /*
     unsigned char addstr[256];
     inet_ntop(AF_INET, &addr->sin_addr, (char*)addstr, sizeof(addstr));
