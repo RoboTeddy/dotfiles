@@ -130,6 +130,6 @@ bind "set completion-ignore-case on"
 bind "set show-all-if-ambiguous on"
 
 # makes bash slow
-#if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    #. $(brew --prefix)/etc/bash_completion
-#fi
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+fi
