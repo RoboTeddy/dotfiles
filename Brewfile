@@ -1,6 +1,8 @@
 brew "grc"
 brew "wget"
 brew "git"
+brew "watch"
+brew "node"
 brew "pyenv"
 brew "bash-completion"
 
