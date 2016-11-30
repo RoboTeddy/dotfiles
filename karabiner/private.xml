@@ -14,4 +14,40 @@
       KeyCode::CURSOR_UP
     </autogen>
   </item>
+  <item>
+    <name>enforce proper shifting technique</name>
+    <identifier>local.shiftenforce</identifier>
+    <autogen>
+      --KeyToKey--
+      KeyCode::9, ModifierFlag::SHIFT_R,
+      KeyCode::VK_NONE
+    </autogen>
+    <autogen>
+      --KeyToKey--
+      KeyCode::0, ModifierFlag::SHIFT_R,
+      KeyCode::VK_NONE
+    </autogen>
+
+    <autogen>
+      --KeyToKey--
+      KeyCode::BRACKET_LEFT, ModifierFlag::SHIFT_R,
+      KeyCode::VK_NONE
+    </autogen>
+    <autogen>
+      --KeyToKey--
+      KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_R,
+      KeyCode::VK_NONE
+    </autogen>
+
+    <autogen>
+      --KeyToKey--
+      KeyCode::COMMA, ModifierFlag::SHIFT_R,
+      KeyCode::VK_NONE
+    </autogen>
+    <autogen>
+      --KeyToKey--
+      KeyCode::DOT, ModifierFlag::SHIFT_R,
+      KeyCode::VK_NONE
+    </autogen>
+  </item>
 </root>
