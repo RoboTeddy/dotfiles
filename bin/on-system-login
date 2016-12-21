@@ -3,12 +3,13 @@
 
 # launchd executes this whenever the user logs in
 
+# Also need to change cron/internet-{on,off}.plist
 # Call internet-off unless we're in the period when internet should be on
-# Internet should be on from 5pm to 7pm
+# Internet should be on from 6pm to 9pm
 
 cd "$(dirname "$0")" # cd to directory this file is in
 
 time=$(date +%k%M)
-if [[ "$time" -le 1700 ]] || [[ "$time" -ge 1900 ]];then
+if [[ "$time" -le 1800 ]] || [[ "$time" -ge 2100 ]];then
   ./internet-off
 fi

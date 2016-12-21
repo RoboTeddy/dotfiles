@@ -1,5 +1,11 @@
 #!/bin/sh
 
+minutes=$1
+
+echo "Why do you need the ever-distracting internet?"
+read why
+echo "$(date) | $why | $minutes" >> ~/why-internet.log
+
 # temporarily kill messaging apps so I don't get sidetracked
 messengers_to_restore=()
 for app in "Viber" "Adium" "Slack" "Messages"; do
@@ -10,7 +16,6 @@ for app in "Viber" "Adium" "Slack" "Messages"; do
   fi
 done
 
-minutes=$1
 
 function finish () {
   echo "Finishing..."

@@ -151,6 +151,7 @@ static boolean_t is_pname_allowed(char *name) {
     if (strcmp(name, "bztransmit") == 0) return true; // backblaze backups
     if (strcmp(name, "npm") == 0) return true;
     if (strcmp(name, "WhatsApp") == 0) return true;
+    if (strcmp(name, "FluidApp") == 0) return true; // work trello, work hackpad, etc
     return false;
 }
 
