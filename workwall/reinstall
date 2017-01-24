@@ -30,7 +30,7 @@ else
     echo "* workwall's kernel extension isn't signed, so to be installed, you *"
     echo "* must disable system integrity protection.                         *"
     echo "* reboot into recovery mode with cmd+r during startup               *"
-    echo "* once in recovery mode, open a terminal and run `csrutil disable`  *"
+    echo "* once in recovery mode, open a terminal and run 'csrutil disable  *"
     echo "*********************************************************************"
 fi
 
