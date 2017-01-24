@@ -192,10 +192,10 @@ static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
     if (intip == 1255173926) return TRUE; // 74.208.111.38
     
     // dig getpocket.com
-    if (intip == 872924386) return TRUE; // 52.7.196.226
-    if (intip == 885613722) return TRUE; // 52.201.100.154
-    if (intip == 875401757) return TRUE; // 52.45.146.29
-    if (intip == 921454049) return TRUE; // 54.236.69.225
+    if (intip == 1796672711) return TRUE; // 107.23.12.199
+    if (intip == 873775521) return TRUE; // 52.20.193.161
+    if (intip == 921454943) return TRUE; // 54.236.73.95
+    if (intip == 878131326) return TRUE; // 52.87.56.126
     
     // dig trello.com
     // trello seems to have many ips (due to akami dns setup), so I'm hardcoding
@@ -800,7 +800,7 @@ static struct kern_ctl_reg g_ctl_reg = {
 extern kern_return_t workwall_start (kmod_info_t *ki, void *data) {
     
     int ret;
-    ww_info("starting...\n");
+    ww_info("starting... (version with Trello et al allowed) \n");
     ww_debug("debug messages are visible\n");
     
     TAILQ_INIT(&tcp_entries);
