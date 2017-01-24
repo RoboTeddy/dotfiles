@@ -11,7 +11,7 @@
 	<key>Default Arrangement Name</key>
 	<string>Default</string>
 	<key>Default Bookmark Guid</key>
-	<string>A64BB497-8184-4E2E-B275-A98DF98F00FF</string>
+	<string>EDD80AA4-3227-4D90-8BBD-479CB8D018A1</string>
 	<key>DimBackgroundWindows</key>
 	<false/>
 	<key>DimInactiveSplitPanes</key>
@@ -138,7 +138,7 @@
 	<key>LoadPrefsFromCustomFolder</key>
 	<true/>
 	<key>NSNavLastRootDirectory</key>
-	<string>~/Projects/dotfiles/iterm2</string>
+	<string>~/Documents</string>
 	<key>NSNavPanelExpandedSizeForOpenMode</key>
 	<string>{712, 448}</string>
 	<key>NSQuotedKeystrokeBinding</key>
@@ -149,46 +149,37 @@
 	<false/>
 	<key>NSScrollViewShouldScrollUnderTitlebar</key>
 	<false/>
-	<key>NSTableView Columns KeyBingingTable</key>
-	<array>
-		<data>
-		BAtzdHJlYW10eXBlZIHoA4QBQISEhAhOU1N0cmluZwGEhAhOU09iamVjdACF
-		hAErATCG
-		</data>
-		<string>198</string>
-		<data>
-		BAtzdHJlYW10eXBlZIHoA4QBQISEhAhOU1N0cmluZwGEhAhOU09iamVjdACF
-		hAErATGG
-		</data>
-		<string>307</string>
-	</array>
-	<key>NSTableView Hidden Columns KeyBingingTable</key>
-	<array/>
-	<key>NSTableView Sort Ordering KeyBingingTable</key>
-	<array/>
-	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
-	<dict>
-		<key>TB Is Shown</key>
-		<integer>1</integer>
-	</dict>
-	<key>NSWindow Frame SessionsPreferences</key>
-	<string>269 93 606 456 0 0 2560 1577 </string>
+	<key>NSTableView Columns v2 KeyBingingTable</key>
+	<data>
+	YnBsaXN0MDDUAQIDBAUGNjdYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
+	AAGGoK4HCA8aGxwdHh8gJjAxMlUkbnVsbNIJCgsOWk5TLm9iamVjdHNWJGNsYXNzogwN
+	gAKACoAN0xAJChEVGVdOUy5rZXlzoxITFIADgASABaMWFxiABoAHgAiACVpJZGVudGlm
+	aWVyVVdpZHRoVkhpZGRlblEwI0BowAAAAAAACNIhIiMkWiRjbGFzc25hbWVYJGNsYXNz
+	ZXNcTlNEaWN0aW9uYXJ5oiMlWE5TT2JqZWN00xAJCicrGaMSExSAA4AEgAWjLC0YgAuA
+	DIAIgAlRMSNAdCGdsi0OVtIhIjM0Xk5TTXV0YWJsZUFycmF5ozM1JVdOU0FycmF5XxAP
+	TlNLZXllZEFyY2hpdmVy0Tg5VUFycmF5gAEACAARABoAIwAtADIANwBGAEwAUQBcAGMA
+	ZgBoAGoAbABzAHsAfwCBAIMAhQCJAIsAjQCPAJEAnACiAKkAqwC0ALUAugDFAM4A2wDe
+	AOcA7gDyAPQA9gD4APwA/gEAAQIBBAEGAQ8BFAEjAScBLwFBAUQBSgAAAAAAAAIBAAAA
+	AAAAADoAAAAAAAAAAAAAAAAAAAFM
+	</data>
+	<key>NSTableView Sort Ordering v2 KeyBingingTable</key>
+	<data>
+	YnBsaXN0MDDUAQIDBAUGFBVYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
+	AAGGoKMHCA1VJG51bGzSCQoLDFpOUy5vYmplY3RzViRjbGFzc6CAAtIODxARWiRjbGFz
+	c25hbWVYJGNsYXNzZXNeTlNNdXRhYmxlQXJyYXmjEBITV05TQXJyYXlYTlNPYmplY3Rf
+	EA9OU0tleWVkQXJjaGl2ZXLRFhdVQXJyYXmAAQgRGiMtMjc7QUZRWFlbYGt0g4ePmKqt
+	swAAAAAAAAEBAAAAAAAAABgAAAAAAAAAAAAAAAAAAAC1
+	</data>
+	<key>NSTableView Supports v2 KeyBingingTable</key>
+	<true/>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>809 580 796 473 0 0 2560 1577 </string>
-	<key>NSWindow Frame UKCrashReporter</key>
-	<string>230 993 592 584 0 0 2560 1577 </string>
+	<string>269 142 796 473 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 64 1131 813 0 0 1440 877 </string>
-	<key>NSWindow Frame iTerm Window 1</key>
-	<string>533 407 1222 860 0 0 2560 1577 </string>
-	<key>NSWindow Frame iTerm Window 2</key>
-	<string>2874 1013 585 452 2560 0 2560 1577 </string>
-	<key>NSWindow Frame iTerm Window 3</key>
-	<string>406 319 585 452 0 0 2560 1577 </string>
-	<key>NSWindow Frame iTerm Window 4</key>
-	<string>471 1125 585 452 0 0 2560 1577 </string>
+	<string>0 44 634 983 0 0 1680 1027 </string>
+	<key>NoSyncHaveWarnedAboutPasteConfirmationChange</key>
+	<true/>
 	<key>NoSyncInstallationId</key>
-	<string>E9250AA3-0181-4A62-800E-E63DBC3F5AA4</string>
+	<string>59E3DC54-B0D6-44BD-8D74-F52670BEB7F9</string>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -196,7 +187,7 @@
 	<key>NoSyncPermissionToShowTip</key>
 	<false/>
 	<key>NoSyncTimeOfFirstLaunchOfVersionWithTip</key>
-	<real>495790863.30807602</real>
+	<real>506622680.27663702</real>
 	<key>OnlyWhenMoreTabs</key>
 	<false/>
 	<key>OpenArrangementAtStartup</key>
@@ -247,7 +238,7 @@
 	<key>SUFeedAlternateAppNameKey</key>
 	<string>iTerm</string>
 	<key>SUFeedURL</key>
-	<string>https://iterm2.com/appcasts/final.xml?shard=64</string>
+	<string>https://iterm2.com/appcasts/final.xml?shard=37</string>
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SUSendProfileInfo</key>
@@ -256,8 +247,6 @@
 	<true/>
 	<key>SplitPaneDimmingAmount</key>
 	<real>0.34273337339743593</real>
-	<key>UKCrashReporterLastCrashReportDate</key>
-	<real>1477428736</real>
 	<key>UseBorder</key>
 	<false/>
 	<key>Window Arrangements</key>
@@ -2995,6 +2984,6 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.0.9</string>
+	<string>3.0.13</string>
 </dict>
 </plist>
