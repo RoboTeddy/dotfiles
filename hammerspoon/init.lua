@@ -14,18 +14,19 @@ hs.hotkey.bind(cc, "r", hs.reload)
 -- Screenshots
 --
 
-hs.hotkey.bind(cc, "s", function ()
-  local cb = function (exitcode, stdout, stderr)
-    if not ( exitcode == 0 ) then
-      hs.alert(stderr)
-    else
-      hs.alert("Screenshot Ready")
-    end
-  end
 
-  local task = hs.task.new("/bin/bash", cb, {"-lic", "screenshot"})
-  task:start()
-end)
+--- hs.hotkey.bind(cc, "s", function ()
+---  local cb = function (exitcode, stdout, stderr)
+---    if not ( exitcode == 0 ) then
+  ---    hs.alert(stderr)
+    ---else
+      ---hs.alert("Screenshot Ready")
+    ---end
+  ---end
+
+  ---local task = hs.task.new("/bin/bash", cb, {"-lic", "screenshot"})
+  ---task:start()
+---end)
 
 --
 -- Application hotkeys
