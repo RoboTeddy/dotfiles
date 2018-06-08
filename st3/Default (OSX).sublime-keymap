@@ -27,5 +27,7 @@
   },
   { "keys": ["shift+super+'"], "command": "append_all_closing_form_symbols"
     //, "context": [{"key": "setting.command_mode", "operand": true}]
-  }
+  },
+
+  { "keys": ["ctrl+alt+p"], "command": "js_prettier" }
 ]

@@ -26,13 +26,7 @@
 		"*.class",
 		"*.psd",
 		"*.db",
-		"*/packed_coffee.js",
-		"*/packed*.js",
-		"*.scssc",
-		"*/packed_scss.css",
 		"*.min.css",
-		"*packed_coffee*",
-		"*/.webassets-cache/*",
 		".vagrant/*",
 		"*/static/*/gen/*",
 		".meteor/local/*",
@@ -40,13 +34,16 @@
 		"node_modules/*",
 		"static/bundles/*",
 		"*log*.json",
-		"client/prototype/*",
-		"client/prototypes/a/*",
-		"client/main-prototype.coffee",
-		"superspace/target/",
-		".lein-repl-history"
+		".lein-repl-history",
+		"*.jsbundle",
+		"*.bundle"
 	],
 	"fold_buttons": false,
+	"folder_exclude_patterns":
+	[
+		"app/android/app/build/*",
+		"app/ios/app/build/*"
+	],
 	"font_size": 12,
 	"highlight_line": true,
 	"ignored_packages":
