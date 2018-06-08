@@ -150,8 +150,11 @@ static boolean_t is_pname_allowed(char *name) {
     if (strcmp(name, "ruby") == 0) return true; // for screenshot uploading
     if (strcmp(name, "bztransmit") == 0) return true; // backblaze backups
     if (strcmp(name, "npm") == 0) return true;
-    if (strcmp(name, "WhatsApp") == 0) return true;
     if (strcmp(name, "FluidApp") == 0) return true; // work trello, work hackpad, etc
+    if (strcmp(name, "Amplify") == 0) return TRUE; // iOS app running in simulator
+    if (strcmp(name, "node") == 0) return TRUE; // coding for work
+    if (strcmp(name, "Simulator") == 0) return TRUE; // iOS simulator (?)
+    if (strcmp(name, "Sequel Pro") == 0) return TRUE;
     return false;
 }
 
@@ -165,6 +168,10 @@ static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
     ww_debug("checking to see if allowed: intip %u, port %u\n", intip, port);
     
     if (port == 22) return TRUE; // allow ssh
+    
+    // shouldn't be necessary--- localhost should be allowed! bug.
+    if (port == 8081) return TRUE; // hack: allow react native packager
+    if (port == 3000) return TRUE; // hack: allow a local dev server.
     
     if (intip == 2130706433) return TRUE; // 127.0.0.1
     
@@ -202,6 +209,16 @@ static boolean_t is_addr_allowed_ip4(struct sockaddr_in* addr) {
     // it to the ip below in /etc/hosts. I'm sure this will never cause any problems
     // for me later. =[
     if (intip == 388358708) return TRUE; // 23.37.226.52
+    
+    //  civictools.firebaseapp.com
+    if (intip == 2539995587) return TRUE; // 151.101.65.195
+    
+    // civictools.firebaseio.com
+    if (intip == 1754956514) return TRUE; // 104.154.130.226
+    
+    // firebase auth
+    if (intip == 2899904077) return TRUE; // 172.217.6.77
+    if (intip == 3627729741) return TRUE; // 216.58.195.77
     /*
     unsigned char addstr[256];
     inet_ntop(AF_INET, &addr->sin_addr, (char*)addstr, sizeof(addstr));
@@ -418,6 +435,7 @@ static errno_t ww_data_in(void *cookie, socket_t so, const struct sockaddr *from
                              mbuf_t *data, mbuf_t *control, sflt_data_flag_t flags) {
     struct TCPEntry	*entry = (struct TCPEntry *) cookie;
     
+
     if (from) { // see note above
         ww_info("ERROR - to field not NULL!\n");
     }
@@ -426,6 +444,10 @@ static errno_t ww_data_in(void *cookie, socket_t so, const struct sockaddr *from
         return 0; // allow
     }
     else {
+        // get chrome debugger connection working w/ react native?
+        ww_debug("unilaterally allowing a data packet in for '%s'", entry->te_pname);
+        return 0;
+        
         ww_debug("Blocking a data packet in for '%s' (flags: %d)\n", entry->te_pname, flags);
         return 1; //block
     }
