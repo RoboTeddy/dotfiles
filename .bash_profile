@@ -39,6 +39,15 @@ function git_branch {
 
 export PS1="[\w\$(git_branch)]\$ "
 
+### rvm
+
+export PATH="$PATH:$HOME/.rvm/bin"
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+### python (used for AWS cmd line tools)
+
+export PATH="~/Library/python/2.7/bin:$PATH"
+
 ### Pyenv
 
 # makes loading slow... do this in the background? is that possible?
@@ -51,6 +60,13 @@ export PS1="[\w\$(git_branch)]\$ "
 # export JAVA_HOME=$(/usr/libexec/java_home)
 # export PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/bin:$PATH
 
+
+### Android Studio
+
+#export ANDROID_HOME=${HOME}/Library/Android/sdk
+export ANDROID_HOME='/usr/local/share/android-sdk'
+export PATH=${PATH}:${ANDROID_HOME}/tools
+export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 
 ### AWS
 
@@ -85,7 +101,7 @@ alias gco='git checkout'
 alias gb='git branch'
 alias gg='git grep'
 alias gbr="git for-each-ref --sort=-committerdate refs/heads/ --format='%(refname) %(committerdate) %(authorname)' | sed 's/refs\/heads\///g'"
-alias gdmb='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
+alias gbdm='git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
 
 
 ### General conveniences
@@ -133,3 +149,14 @@ bind "set show-all-if-ambiguous on"
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
 fi
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/ted/Downloads/google-cloud-sdk/path.bash.inc' ]; then source '/Users/ted/Downloads/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/ted/Downloads/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/ted/Downloads/google-cloud-sdk/completion.bash.inc'; fi
+
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
