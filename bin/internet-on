@@ -1,3 +1,4 @@
 #!/bin/sh
 
-workwallctl -E 0
+#workwallctl -E 0
+automator ~/dotfiles/littlesnitch/distractionmode.workflow
