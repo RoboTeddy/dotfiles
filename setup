@@ -137,6 +137,9 @@ defaults write -g ApplePressAndHoldEnabled -bool false
 # chflags nohidden ~/Library
 # chflags nohidden ~/.ssh
 
+# disable gatekeeper to allow installing apps from anywhere
+sudo spctl --master-disable
+
 # Enable tap to click for this user and for the login screen
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
