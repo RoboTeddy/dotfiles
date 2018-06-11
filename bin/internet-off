@@ -1,4 +1,7 @@
 #!/bin/sh
 
 #workwallctl -E 1
-automator ~/dotfiles/littlesnitch/workmode.workflow
+#automator ~/dotfiles/littlesnitch/workmode.workflow
+
+# using ON instead of OFF cuz applescript is annoying
+osascript ~/dotfiles/radiosilence/toggle.scpt ON
