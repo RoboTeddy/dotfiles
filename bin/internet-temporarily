@@ -6,9 +6,14 @@ echo "Why do you need the ever-distracting internet?"
 read why
 echo "$(date) | $why | $minutes" >> ~/why-internet.log
 
+if [[ "$why" = "test" || "$why" = "lala" || "$why" = "hmm" || $why = "hmmm" || $why = "lalala" ]]; then
+  echo "That won't do it."
+  exit
+fi
+
 # temporarily kill messaging apps so I don't get sidetracked
 messengers_to_restore=()
-for app in "Viber" "Adium" "Slack" "Messages"; do
+for app in "Viber" "Adium" "Slack" "Messages" "Discord"; do
   if pgrep $app; then
     echo "Killing $app"
     killall "$app"
