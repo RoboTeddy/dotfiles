@@ -87,6 +87,11 @@ export EC2_PRIVATE_KEY=`ls $AWS_HOME/pk-*.pem`
 export EC2_CERT=`ls $AWS_HOME/cert-*.pem`
 
 
+### Tedware
+
+alias tw='subl ~/projects/tedware/tedware.txt'
+
+
 ### Git
 
 alias gs='git status'
