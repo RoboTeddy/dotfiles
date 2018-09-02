@@ -8,25 +8,24 @@ local cc = {"ctrl", "cmd"}
 -- Reload
 --
 
-hs.hotkey.bind(cc, "r", hs.reload)
+hs.hotkey.bind(cc, "h", hs.reload)
 
 --
 -- Screenshots
 --
 
+hs.hotkey.bind(cc, "s", function ()
+  local cb = function (exitcode, stdout, stderr)
+  if not ( exitcode == 0 ) then
+    hs.alert(stderr)
+      else
+        hs.alert("Screenshot Ready")
+      end
+    end
 
---- hs.hotkey.bind(cc, "s", function ()
----  local cb = function (exitcode, stdout, stderr)
----    if not ( exitcode == 0 ) then
-  ---    hs.alert(stderr)
-    ---else
-      ---hs.alert("Screenshot Ready")
-    ---end
-  ---end
-
-  ---local task = hs.task.new("/bin/bash", cb, {"-lic", "screenshot"})
-  ---task:start()
----end)
+    local task = hs.task.new("/bin/bash", cb, {"-lic", "screenshot"})
+    task:start()
+end)
 
 --
 -- Application hotkeys
@@ -56,7 +55,7 @@ end
 
 --
 -- Window manipulation
---
+--https://www.reddit.com/r/Jokes/comments/9bxp4s/iron_man_is_a_very_confusing_character/?utm_content=title&utm_medium=hot&utm_source=reddit&utm_name=all
 
 -- Set window animation off. It's much smoother.
 hs.window.animationDuration = 0
@@ -96,3 +95,20 @@ hs.hotkey.bind(cc, "l", gridset(0, 0, 1, 2))
 
 -- Right 3/4 of the screen
 hs.hotkey.bind(cc, "r", gridset(1, 0, 3, 2))
+
+
+
+--
+-- Sit/Stand reminder
+--
+
+local sitStandCb = function(result)
+  -- print("Callback Result: " .. result)
+end
+
+hs.timer.doEvery(30 * 60, function()
+  local r = hs.screen.primaryScreen():frame()
+  if hs.host.idleTime() < 120 then
+    hs.dialog.alert(r["w"]/2, r["h"]/2, sitStandCb, "Sit or Stand", "", "Done", "", "informational")
+  end
+end)
