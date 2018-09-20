@@ -109,6 +109,9 @@ end
 hs.timer.doEvery(30 * 60, function()
   local r = hs.screen.primaryScreen():frame()
   if hs.host.idleTime() < 120 then
+    print("opening sit/stand dialog")
     hs.dialog.alert(r["w"]/2, r["h"]/2, sitStandCb, "Sit or Stand", "", "Done", "", "informational")
+  else
+      print("skipping sit/stand dialog")
   end
 end)
