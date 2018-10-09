@@ -6,7 +6,7 @@ echo "Why do you need the ever-distracting internet?"
 read why
 echo "$(date) | $why | $minutes" >> ~/why-internet.log
 
-if [[ $why = "test" || $why =~ ^hm+$ || $why =~ ^(la)+$ || $why =~ ^what+$ ]]; then
+if [[ $why = ^test$ || $why =~ ^hm+$ || $why =~ ^(la)+$ || $why =~ ^wha+  || $why =~ ^whee+$ || $why =~ ^a+$ ]]; then
   echo "That won't do it."
   exit
 fi
