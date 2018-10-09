@@ -27,6 +27,16 @@ hs.hotkey.bind(cc, "s", function ()
     task:start()
 end)
 
+
+--
+-- Tedware
+--
+
+hs.hotkey.bind(cc, "w", function ()
+  os.execute('open ~/projects/tedware/tedware.txt')
+end)
+
+
 --
 -- Application hotkeys
 --
