@@ -11,7 +11,7 @@
 	<key>Default Arrangement Name</key>
 	<string>Default</string>
 	<key>Default Bookmark Guid</key>
-	<string>8A40E67A-339C-48FB-98AF-22FCED9100F5</string>
+	<string>F1692F78-A65C-41E0-B894-926B428A1D66</string>
 	<key>DimBackgroundWindows</key>
 	<false/>
 	<key>DimInactiveSplitPanes</key>
@@ -177,7 +177,7 @@
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>602 730 1018 447 0 0 2560 1577 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>640 1313 1102 775 -330 1050 2560 1417 </string>
+	<string>-1729 1391 1102 796 -2890 1050 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>-2327 1064 585 452 -2560 0 2560 1577 </string>
 	<key>NoSyncHaveWarnedAboutPasteConfirmationChange</key>

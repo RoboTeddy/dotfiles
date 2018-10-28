@@ -1,0 +1,16 @@
+if [[ $# -eq 0 ]] ; then
+  bedtimeHrsAfterMidnight=$(curl -i --request POST \
+    --data '{"event": "getBedtime"}' \
+    https://d4iw2iv5td.execute-api.us-east-1.amazonaws.com/production/robosleep-receive)
+
+  echo "${bedtimeHrsAfterMidnight} hr after midnight"
+  exit 1
+else
+  data=$(printf '{"event": "setBedtime", "bedtimeHrsAfterMidnight": "%s"}' $1)
+  curl -i --request POST \
+    --data "$data" \
+    https://d4iw2iv5td.execute-api.us-east-1.amazonaws.com/production/robosleep-receive
+
+  echo "Set bedtime to $1 hr after midnight"
+fi
+

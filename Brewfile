@@ -11,3 +11,5 @@ cask "karabiner"
 cask "vlc"
 cask "hammerspoon"
 cask "iterm2"
+
+cask "eloston-chromium"
