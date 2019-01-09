@@ -6,14 +6,14 @@ echo "Why do you need the ever-distracting internet?"
 read why
 echo "$(date) | $why | $minutes" >> ~/why-internet.log
 
-if [[ $why = ^test$ || $why =~ ^hm+$ || $why =~ ^(la)+$ || $why =~ ^wha+  || $why =~ ^whee+$ || $why =~ ^a+$ ]]; then
+if [[ $why = ^test$ || $why =~ ^hm+$ || $why =~ ^(la)+$ || $why =~ ^wha+  || $why =~ ^whee+$ || $why =~ ^a+$ || $why =~ ^ya+$ || $why =~ ^[asdf]+$ ]]; then
   echo "That won't do it."
   exit
 fi
 
 # temporarily kill messaging apps so I don't get sidetracked
 messengers_to_restore=()
-for app in "Viber" "Adium" "Slack" "Messages" "Discord" "WhatsApp"; do
+for app in "Adium" "Slack" "Messages" "Discord" "WhatsApp"; do
   if pgrep $app; then
     echo "Killing $app"
     killall "$app"
@@ -27,10 +27,6 @@ function finish () {
   internet-off
   for app in "${messengers_to_restore[@]}"; do
     echo "Relaunching $app"
-    # Viber is rude and refuses to start hidden, so we don't restore it
-    if [ "$app" != "Viber" ]; then
-      open --hide "/Applications/$app.app/"
-    fi
   done
 }
 
