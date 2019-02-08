@@ -4,4 +4,6 @@
 #automator ~/dotfiles/littlesnitch/distractionmode.workflow
 
 # using OFF instead of ON cuz applescript is annoying
-osascript ~/dotfiles/radiosilence/toggle.scpt OFF
+# osascript ~/dotfiles/radiosilence/toggle.scpt OFF
+
+osascript ~/dotfiles/littlesnitch/set.scpt on
