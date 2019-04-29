@@ -12,3 +12,4 @@ cask "hammerspoon"
 cask "iterm2"
 
 cask "eloston-chromium"
+cask "anki"
