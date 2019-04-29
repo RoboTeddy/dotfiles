@@ -1,0 +1,33 @@
+#!/usr/bin/python
+
+import re
+import subprocess
+import datetime
+
+lines = subprocess.check_output(['tail', '-n', '200', '/users/ted/why-internet.log']).splitlines()
+
+now = datetime.datetime.now()
+
+# the most recent 4am (yuck)
+hour_divider = 4
+since = (now - datetime.timedelta(days=(1 if now.hour < hour_divider else 0))) \
+  .replace(hour=hour_divider, minute=0, second=0)
+
+since_ts = int(since.strftime('%s')) # yuck
+
+
+total_minutes = 0
+for line in lines:
+  (timestampstr, why, minutesstr) = re.match("^(.*) \| (.*) \| (.*)$", line).groups()
+  try:
+    minutes = int(minutesstr, 10)
+    timestamp = int(timestampstr, 10)
+  except ValueError:
+    continue
+
+
+  if timestamp > since_ts and why == "relax":
+    total_minutes += minutes
+
+
+print total_minutes
