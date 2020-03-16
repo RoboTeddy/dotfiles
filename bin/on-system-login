@@ -9,4 +9,4 @@
 
 cd "$(dirname "$0")" # cd to directory this file is in
 
-./internet-off
+# ./internet-off
