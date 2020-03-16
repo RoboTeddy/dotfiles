@@ -6,7 +6,6 @@ brew "node"
 brew "pyenv"
 brew "bash-completion"
 
-cask "karabiner-elements"
 cask "vlc"
 cask "hammerspoon"
 cask "iterm2"
