@@ -48,7 +48,7 @@
     expand-region
     fill-column-indicator
     flx-ido
-    ido-ubiquitous
+    ido-completing-read+
     ido-vertical-mode
     js2-mode
     json-mode
@@ -130,8 +130,8 @@
 (global-evil-leader-mode) ;; must be enabled prior to evil-mode
 (evil-mode 1)
 ;; investigate: evil-want-visual-char-semi-exclusive
-(setq evil-move-cursor-back nil ;; paredit structured navigation compatibility
-      evil-highlight-closing-paren-at-point-states)
+;;(setq evil-move-cursor-back nil ;; paredit structured navigation compatibility
+;;      evil-highlight-closing-paren-at-point-states)
 
 ;; Make movement keys work like they should
 (define-key evil-normal-state-map (kbd "<remap> <evil-next-line>") 'evil-next-visual-line)
