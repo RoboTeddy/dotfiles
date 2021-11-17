@@ -38,7 +38,7 @@ install_symlink () {
     fi
 }
 
-### Homebrew (runs before symlinks are installed, since .bash_profile depends on brew & things in Brewfile)
+### Homebrew (runs before symlinks are installed, since .zsh_profile depends on brew & things in Brewfile)
 
 if ! type "brew" > /dev/null
 then
@@ -50,13 +50,6 @@ info 'Running brew bundle...'
 brew bundle
 
 
-### Pyenv
-
-# pyenv install -s 3.5.2
-# pyenv global 3.5.2
-# pip install --upgrade pip
-
-
 ### Dependency for bin/screenshot
 
 info 'Installing dependencies for bin/screenshot'
@@ -66,13 +59,14 @@ sudo gem install --conservative aws-sdk -v '~> 2'
 ### Symlinks
 
 info 'Writing symlinks...'
-install_symlink "$DOTFILES_ROOT" "$HOME/dotfiles"
-install_symlink "$DOTFILES_ROOT/.bash_profile" "$HOME/.bash_profile"
+install_symlink "$DOTFILES_ROOT/.zshrc" "$HOME/.zshrc"
 install_symlink "$DOTFILES_ROOT/.gitconfig" "$HOME/.gitconfig"
 install_symlink "$DOTFILES_ROOT/.gitignore-global" "$HOME/.gitignore-global"
 install_symlink "$DOTFILES_ROOT/.npmrc" "$HOME/.npmrc"
 install_symlink "$DOTFILES_ROOT/Brewfile" "$HOME/Brewfile"
 install_symlink "$DOTFILES_ROOT/hammerspoon" "$HOME/.hammerspoon"
+
+install_symlink "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" "$DOTFILES_ROOT/bin/subl"
 
 SUBLIME_USER_ROOT="$HOME/Library/Application Support/Sublime Text 3/Packages/User"
 for name in "Default (OSX).sublime-keymap" "Preferences.sublime-settings"
@@ -98,23 +92,17 @@ done
 #$kara set remap.pc_application2escape 1
 #$kara set remap.roboteddy 1
 
-
-### Install workwall
-
-# info 'Installing workwall'
-# sudo "$DOTFILES_ROOT/workwall/reinstall"
-
 ### Cron
 
 info "Setting up periodic tasks"
 
-for f in cron/*.plist
-do
-    dst="$HOME/Library/LaunchAgents/$(basename "$f")"
-    install_symlink "$DOTFILES_ROOT/$f" "$dst"
-    launchctl load -w "$dst"
-    success "Set up $dst"
-done
+#for f in cron/*.plist
+# do
+#     dst="$HOME/Library/LaunchAgents/$(basename "$f")"
+#     install_symlink "$DOTFILES_ROOT/$f" "$dst"
+#     launchctl load -w "$dst"
+#     success "Set up $dst"
+# done
 
 # internet-on and internet-off sudo /sbin/pfctl to modify the firewall
 # task can't prompt for password, so let's modify sudoers.
@@ -161,7 +149,7 @@ defaults write com.apple.dashboard mcx-disabled -bool true
 defaults write com.apple.dock 'dashboard-in-overlay' -bool false
 
 # Set a really fast key repeat.
-defaults write NSGlobalDomain KeyRepeat -int 0
+defaults write NSGlobalDomain KeyRepeat -int 2
 
 # Set the Finder prefs for hiding a few different volumes on the Desktop.
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
@@ -178,9 +166,12 @@ defaults write com.apple.Safari "com.apple.Safari.ContentPageGroupIdentifier.Web
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 
-info 'Sourcing ~/.bash_profile...'
+# Show hidden files in Finder
+defaults write com.apple.Finder AppleShowAllFiles true
 
-source ~/.bash_profile
+info 'Sourcing ~/.zsh_profile...'
+
+source ~/.zshrc
 
 success 'Done!'
 
