@@ -161,6 +161,4 @@ if [ -f '/Users/ted/Downloads/google-cloud-sdk/completion.bash.inc' ]; then sour
 export PATH="$HOME/.poetry/bin:$PATH"
 
 ### asdf
-echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc
-
 . /usr/local/opt/asdf/libexec/asdf.sh
