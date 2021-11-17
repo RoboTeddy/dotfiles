@@ -28,15 +28,16 @@
 		"*.db",
 		"*.min.css",
 		".vagrant/*",
+		".compiled-typescript/",
 		"*/static/*/gen/*",
 		".meteor/local/*",
 		".node_modules/*",
-		"node_modules/*",
 		"static/bundles/*",
 		"*log*.json",
 		".lein-repl-history",
 		"*.jsbundle",
-		"*.bundle"
+		"*.bundle",
+		"node_modules"
 	],
 	"fold_buttons": false,
 	"folder_exclude_patterns":
@@ -44,7 +45,7 @@
 		"app/android/app/build/*",
 		"app/ios/app/build/*"
 	],
-	"font_size": 12,
+	"font_size": 13,
 	"highlight_line": true,
 	"ignored_packages":
 	[
@@ -59,6 +60,7 @@
 	"save_on_focus_lost": true,
 	"scroll_past_end": true,
 	"scroll_speed": 0,
+	"show_errors_inline": false,
 	"show_tab_close_buttons": false,
 	"tab_size": 2,
 	"tabs_small": true,
@@ -69,5 +71,5 @@
 	"vintage_start_in_command_mode": true,
 	"vintage_use_clipboard": false,
 	"wide_caret": true,
-	"wrap_width": 80
+	"wrap_width": 80,
 }
