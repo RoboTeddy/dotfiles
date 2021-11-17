@@ -4,7 +4,7 @@ then
     source ~/.localrc
 fi
 
-export PATH="~/dotfiles/bin:/usr/local/bin:/usr/local/sbin:$PATH"
+export PATH=~/projects/dotfiles/bin:/usr/local/bin:/usr/local/sbin:$PATH
 export MANPATH="/usr/local/man:/usr/local/git/man:$MANPATH"
 
 
@@ -37,16 +37,12 @@ function git_branch {
     fi
 }
 
-export PS1="[\w\$(git_branch)]\$ "
+# export PS1="[\w\$(git_branch)]\$ "
 
 ### rvm
 
 export PATH="$PATH:$HOME/.rvm/bin"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-### python (used for AWS cmd line tools)
-
-export PATH="~/Library/python/2.7/bin:$PATH"
 
 ### Pyenv
 
@@ -147,13 +143,13 @@ extract () {
 
 ### Autocompletion
 
-bind "set completion-ignore-case on"
-bind "set show-all-if-ambiguous on"
+# bind "set completion-ignore-case on"
+# bind "set show-all-if-ambiguous on"
 
 # makes bash slow
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
-fi
+#if [ -f $(brew --prefix)/etc/bash_completion ]; then
+#    . $(brew --prefix)/etc/bash_completion
+#fi
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/ted/Downloads/google-cloud-sdk/path.bash.inc' ]; then source '/Users/ted/Downloads/google-cloud-sdk/path.bash.inc'; fi
@@ -162,22 +158,17 @@ if [ -f '/Users/ted/Downloads/google-cloud-sdk/path.bash.inc' ]; then source '/U
 if [ -f '/Users/ted/Downloads/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/ted/Downloads/google-cloud-sdk/completion.bash.inc'; fi
 
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# added by Anaconda3 5.3.1 installer
-# >>> conda init >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$(CONDA_REPORT_ERRORS=false '/Users/ted/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    \eval "$__conda_setup"
-else
-    if [ -f "/Users/ted/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/ted/anaconda3/etc/profile.d/conda.sh"
-        CONDA_CHANGEPS1=false conda activate base
-    else
-        \export PATH="/Users/ted/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda init <<<
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export PATH="$HOME/.poetry/bin:$PATH"
+
+
+### pyenv
+# eval "$(pyenv init -)"
+
+### asdf
+echo -e "\n. $(brew --prefix asdf)/libexec/asdf.sh" >> ${ZDOTDIR:-~}/.zshrc
+
+. /usr/local/opt/asdf/libexec/asdf.sh

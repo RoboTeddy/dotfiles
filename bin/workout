@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+from datetime import datetime
+import random
+import subprocess
+
+exercises = [
+  "push-ups",
+  "pull-ups",
+  "supermans",
+  "wall w's",
+  "planks",
+  "squats",
+  "deadlifts",
+  "glute activators",
+  #"swings",
+]
+
+logfile = "/users/ted/workout.log"
+with open(logfile, "a") as file:
+  exercises = random.sample(exercises, 3)
+  file.write('——— {} ———:\n'.format(datetime.now().strftime("%m/%d/%Y %H:%M")))
+  for exercise in exercises:
+    file.write(exercise + ': \n')
+
+subprocess.call(['vi', logfile])
