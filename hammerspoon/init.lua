@@ -57,7 +57,7 @@ function toggleApp(hint)
   end
 end
 
-local shortcuts = {e="Sublime Text", t="Things", c="Google Chrome", i="iTerm"}
+local shortcuts = {e="Visual Studio Code", t="Things", c="Brave Browser", i="iTerm"}
 
 for key, appName in pairs(shortcuts) do
   hs.hotkey.bind(cc, key, function() toggleApp(appName) end)
@@ -112,10 +112,10 @@ hs.hotkey.bind(cc, "r", gridset(1, 0, 3, 2))
 -- Sit/Stand reminder
 --
 
-hs.timer.doEvery(30 * 60, function()
-  if hs.host.idleTime() < 120 then
-    hs.notify.new({alwaysPresent=true, autoWithraw=false, withdrawAfter=0, title="Sit/Stand"}):send()
-  else
-      print("skipping sit/stand dialog")
-  end
-end)
+-- hs.timer.doEvery(30 * 60, function()
+--   if hs.host.idleTime() < 120 then
+--     hs.notify.new({alwaysPresent=true, autoWithraw=false, withdrawAfter=0, title="Sit/Stand"}):send()
+--   else
+--     print("skipping sit/stand dialog")
+--   end
+-- end)
